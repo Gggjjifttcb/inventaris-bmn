@@ -44,8 +44,8 @@ $qRuang = mysqli_query($conn, "SELECT * FROM ruang ORDER BY nama_ruang ASC");
 <div class="navbar">
     <h1>Inventaris BMN</h1>
     <div>
-        <a href="ruang/index.php">Data Ruang</a>
-        <a href="auth/logout.php">Logout</a>
+       <a href="ruang/index.php" class="btn btn-ruang">Data Ruang</a>
+<a href="auth/logout.php" class="btn btn-logout">Logout</a>
     </div>
 </div>
 

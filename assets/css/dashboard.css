@@ -206,3 +206,27 @@ table tr:hover {
         gap: 10px;
     }
 }
+.btn {
+    padding: 10px 20px;
+    border-radius: 6px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+/* Tombol Data Ruang */
+.btn-ruang {
+    background-color: #1abc9c; /* hijau toska */
+}
+.btn-ruang:hover {
+    background-color: #16a085;
+}
+
+/* Tombol Logout */
+.btn-logout {
+    background-color: #e74c3c; /* merah */
+}
+.btn-logout:hover {
+    background-color: #c0392b;
+}
