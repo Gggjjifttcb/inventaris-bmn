@@ -1,4 +1,5 @@
 <?php
+
 include "config/koneksi.php";
 
 // Jika sudah login, langsung ke dashboard
@@ -55,13 +56,6 @@ if (isset($_POST['login'])) {
 
                 <button name="login" class="btn btn-primary w-100">Login</button>
             </form>
-
-            <?php if (isset($_SESSION['login'])) { ?>
-                <a href="dashboard.php" class="btn btn-outline-secondary w-100 mt-2">
-                    ← Kembali ke Dashboard
-                </a>
-            <?php } ?>
-
         </div>
     </div>
 </div>

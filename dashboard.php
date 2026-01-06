@@ -6,7 +6,7 @@ if (!isset($_SESSION['login'])) {
     exit;
 }
 
-/* ================= CARD DINAMIS ================= */
+/* ================= STATISTIK ================= */
 
 // Total barang
 $qBarang = mysqli_query($conn, "SELECT COUNT(*) AS total FROM inventaris");
@@ -24,23 +24,12 @@ $totalBaris = mysqli_fetch_assoc($qBaris)['total'];
 $qBox = mysqli_query($conn, "SELECT COUNT(DISTINCT box) AS total FROM inventaris");
 $totalBox = mysqli_fetch_assoc($qBox)['total'];
 
-/* ================= FITUR SEARCH ================= */
+// Total ruang
+$qTotalRuang = mysqli_query($conn, "SELECT COUNT(*) AS total FROM ruang");
+$totalRuang = mysqli_fetch_assoc($qTotalRuang)['total'];
 
-$keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
-
-if ($keyword != '') {
-    $data = mysqli_query($conn, "
-        SELECT * FROM inventaris 
-        WHERE kode  LIKE '%$keyword%'
-           OR nama  LIKE '%$keyword%'
-           OR rak   LIKE '%$keyword%'
-           OR baris LIKE '%$keyword%'
-           OR box   LIKE '%$keyword%'
-        ORDER BY id DESC
-    ");
-} else {
-    $data = mysqli_query($conn, "SELECT * FROM inventaris ORDER BY id DESC");
-}
+// Data ruang
+$qRuang = mysqli_query($conn, "SELECT * FROM ruang ORDER BY nama_ruang ASC");
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -55,7 +44,7 @@ if ($keyword != '') {
 <div class="navbar">
     <h1>Inventaris BMN</h1>
     <div>
-        <a href="inventaris/index.php">Data Inventaris</a>
+        <a href="ruang/index.php">Data Ruang</a>
         <a href="auth/logout.php">Logout</a>
     </div>
 </div>
@@ -63,84 +52,41 @@ if ($keyword != '') {
 <!-- ================= KONTEN ================= -->
 <div class="container">
 
-    <!-- CARD -->
-    <div class="cards">
-        <div class="card">
-            <h3>Total Barang</h3>
-            <p><?= $totalBarang ?></p>
-        </div>
-        <div class="card">
-            <h3>Total Rak</h3>
-            <p><?= $totalRak ?></p>
-        </div>
-        <div class="card">
-            <h3>Total Baris</h3>
-            <p><?= $totalBaris ?></p>
-        </div>
-        <div class="card">
-            <h3>Total Box</h3>
-            <p><?= $totalBox ?></p>
-        </div>
+    <!-- ================= PENJELASAN WEB ================= -->
+    <div class="info-box">
+        <h2>Sistem Inventaris BMN</h2>
+        <p>
+            Sistem Inventaris BMN merupakan aplikasi berbasis web yang digunakan
+            untuk mencatat, mengelola, dan memantau Barang Milik Negara (BMN)
+            berdasarkan lokasi ruang penyimpanan.
+        </p>
+        <p>
+            Setiap barang dicatat secara detail meliputi kode barang, nama barang,
+            posisi rak, baris, dan box sehingga memudahkan pencarian,
+            pengawasan, serta pengelolaan inventaris secara tertib dan terstruktur.
+        </p>
     </div>
 
-    <!-- ================= TABEL ================= -->
-    <div class="table-wrapper">
-        <div class="table-header">
-            <h2>Data Inventaris BMN</h2>
+    <!-- ================= CARD STATISTIK ================= -->
+  
+    <!-- ================= DATA RUANG ================= -->
+    <h2 style="margin-top:40px;">Data Ruang</h2>
 
-            <!-- FORM SEARCH -->
-            <form method="get" style="display:flex; gap:10px;">
-                <input type="text"
-                       name="search"
-                       placeholder="Cari kode, nama, rak, baris, box..."
-                       value="<?= htmlspecialchars($keyword) ?>"
-                       style="padding:8px 12px;border-radius:6px;border:1px solid #ccc;">
-                <button type="submit" class="btn">Cari</button>
-                <a href="dashboard.php" class="btn" style="background:#6c757d;">Reset</a>
-            </form>
-        </div>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Kode</th>
-                    <th>Nama Barang</th>
-                    <th>Rak</th>
-                    <th>Baris</th>
-                    <th>Box</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php
-            $no = 1;
-            if (mysqli_num_rows($data) > 0) {
-                while ($row = mysqli_fetch_assoc($data)) {
-            ?>
-                <tr>
-                    <td><?= $no++ ?></td>
-                    <td><?= $row['kode'] ?></td>
-                    <td><?= $row['nama'] ?></td>
-                    <td><?= $row['rak'] ?></td>
-                    <td><?= $row['baris'] ?></td>
-                    <td><?= $row['box'] ?></td>
-                    <td class="action">
-                        <a href="inventaris/edit.php?id=<?= $row['id'] ?>">Edit</a>
-                        <a href="inventaris/hapus.php?id=<?= $row['id'] ?>"
-                           onclick="return confirm('Yakin hapus data?')">Hapus</a>
-                    </td>
-                </tr>
-            <?php
-                }
-            } else {
-            ?>
-                <tr>
-                    <td colspan="7" style="text-align:center;">Data tidak ditemukan</td>
-                </tr>
+    <div class="cards">
+        <?php if (mysqli_num_rows($qRuang) > 0) { ?>
+            <?php while ($r = mysqli_fetch_assoc($qRuang)) { ?>
+                <div class="card ruang-card">
+                    <h3><?= $r['nama_ruang'] ?></h3>
+                    <p><?= $r['keterangan'] ?></p>
+                    <br>
+                    <a href="inventaris/index.php?ruang_id=<?= $r['id'] ?>" class="btn">
+                        Lihat Inventaris
+                    </a>
+                </div>
             <?php } ?>
-            </tbody>
-        </table>
+        <?php } else { ?>
+            <p>Belum ada data ruang.</p>
+        <?php } ?>
     </div>
 
 </div>
