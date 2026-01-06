@@ -1,0 +1,92 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: #f4f6f9;
+    padding: 30px;
+    color: #333;
+}
+
+/* ===== HEADER ===== */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header h2 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* ===== BUTTON ===== */
+.btn {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+/* ===== TABLE ===== */
+.table-wrapper {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table thead {
+    background: #f1f4f8;
+}
+
+table th,
+table td {
+    padding: 12px;
+    text-align: left;
+    font-size: 14px;
+}
+
+table th {
+    font-weight: 600;
+    color: #555;
+}
+
+table tr:nth-child(even) {
+    background: #fafafa;
+}
+
+/* ===== AKSI ===== */
+.action a {
+    text-decoration: none;
+    font-size: 13px;
+    margin-right: 10px;
+    color: #2a5298;
+}
+
+.action a:hover {
+    text-decoration: underline;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    table {
+        font-size: 12px;
+    }
+}
