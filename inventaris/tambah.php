@@ -1,5 +1,4 @@
 <?php
-
 include "../config/koneksi.php";
 
 if (!isset($_SESSION['login'])) {
@@ -7,22 +6,29 @@ if (!isset($_SESSION['login'])) {
     exit;
 }
 
-// Ambil ruang_id dari URL
 $ruang_id = isset($_GET['ruang_id']) ? intval($_GET['ruang_id']) : 0;
-
-// Ambil nama ruang (untuk judul)
 $ruangData = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM ruang WHERE id=$ruang_id"));
 
-// Simpan data
-if (isset($_POST['submit'])) {
+if(isset($_POST['submit'])){
     $kode  = $_POST['kode'];
     $nama  = $_POST['nama'];
     $rak   = $_POST['rak'];
     $baris = $_POST['baris'];
     $box   = $_POST['box'];
 
-    mysqli_query($conn, "INSERT INTO inventaris (kode,nama,rak,baris,box,ruang_id) 
-                         VALUES ('$kode','$nama','$rak','$baris','$box','$ruang_id')");
+    // Upload gambar
+    $image = '';
+    if(isset($_FILES['image']['name']) && $_FILES['image']['name'] != ''){
+        $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+        $allowed = ['jpg','jpeg','png','gif'];
+        if(in_array(strtolower($ext), $allowed)){
+            $image = time().'_'.$_FILES['image']['name'];
+            move_uploaded_file($_FILES['image']['tmp_name'], '../uploads/'.$image);
+        }
+    }
+
+    mysqli_query($conn, "INSERT INTO inventaris (kode,nama,rak,baris,box,ruang_id,image) 
+                         VALUES ('$kode','$nama','$rak','$baris','$box','$ruang_id','$image')");
     header("Location: index.php?ruang_id=$ruang_id");
 }
 ?>
@@ -40,7 +46,7 @@ if (isset($_POST['submit'])) {
         <h2>Tambah Inventaris Ruang <?= $ruangData['nama_ruang'] ?? '' ?></h2>
     </div>
 
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <label>Kode Barang</label>
         <input type="text" name="kode" required>
 
@@ -55,6 +61,9 @@ if (isset($_POST['submit'])) {
 
         <label>Box</label>
         <input type="text" name="box" required>
+
+        <label>Gambar (jpg/png/gif)</label>
+        <input type="file" name="image" accept="image/*">
 
         <button type="submit" name="submit">Tambah Data</button>
     </form>

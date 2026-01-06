@@ -1,5 +1,4 @@
 <?php
-
 include "../config/koneksi.php";
 
 if (!isset($_SESSION['login'])) {
@@ -8,14 +7,12 @@ if (!isset($_SESSION['login'])) {
 }
 
 $id = intval($_GET['id']);
-
-// Ambil ruang_id sebelum hapus (untuk redirect)
 $data = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM inventaris WHERE id=$id"));
-$ruang_id = $data['ruang_id'];
 
-// Hapus data
+// Hapus gambar
+if(!empty($data['image']) && file_exists('../uploads/'.$data['image'])){
+    unlink('../uploads/'.$data['image']);
+}
+
 mysqli_query($conn, "DELETE FROM inventaris WHERE id=$id");
-
-// Redirect kembali ke inventaris ruang
-header("Location: index.php?ruang_id=$ruang_id");
-exit;
+header("Location: index.php?ruang_id=".$data['ruang_id']);

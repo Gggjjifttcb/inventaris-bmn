@@ -1,5 +1,4 @@
 <?php
-
 include "../config/koneksi.php";
 
 if (!isset($_SESSION['login'])) {
@@ -10,7 +9,7 @@ if (!isset($_SESSION['login'])) {
 // Ambil ruang_id dari URL
 $ruang_id = isset($_GET['ruang_id']) ? intval($_GET['ruang_id']) : 0;
 
-// Ambil data ruang (untuk judul halaman)
+// Ambil nama ruang
 $ruangData = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM ruang WHERE id=$ruang_id"));
 
 // Ambil search keyword
@@ -46,7 +45,7 @@ $data = mysqli_query($conn, $query);
 <div class="header">
     <div class="header-left">
         <a href="../dashboard.php" class="btn-back">← Dashboard</a>
-        <h2>Inventaris Ruang <?= $ruangData['nama_ruang'] ?? '' ?></h2>
+        <h2>Inventaris BMN Ruang <?= $ruangData['nama_ruang'] ?? '' ?></h2>
     </div>
     <a href="tambah.php?ruang_id=<?= $ruang_id ?>" class="btn">+ Tambah Data</a>
 </div>
@@ -63,7 +62,6 @@ $data = mysqli_query($conn, $query);
         <button type="submit" class="btn">Cari</button>
         <a href="index.php?ruang_id=<?= $ruang_id ?>" class="btn btn-back" style="background:#6c757d;">Reset</a>
         <a href="export_pdf.php?ruang_id=<?= $ruang_id ?>" class="btn" style="background:#28a745;">📄 Export PDF</a>
-
     </form>
 
     <!-- TABEL -->
@@ -76,6 +74,7 @@ $data = mysqli_query($conn, $query);
                 <th>Rak</th>
                 <th>Baris</th>
                 <th>Box</th>
+                <th>Gambar</th>
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -92,10 +91,16 @@ $data = mysqli_query($conn, $query);
                 <td><?= $row['rak'] ?></td>
                 <td><?= $row['baris'] ?></td>
                 <td><?= $row['box'] ?></td>
+                <td>
+                    <?php if(!empty($row['image']) && file_exists('../uploads/'.$row['image'])): ?>
+                        <img src="../uploads/<?= $row['image'] ?>" width="50">
+                    <?php else: ?>
+                        -
+                    <?php endif; ?>
+                </td>
                 <td class="action">
                     <a href="edit.php?id=<?= $row['id'] ?>">Edit</a>
-                    <a href="hapus.php?id=<?= $row['id'] ?>"
-                       onclick="return confirm('Yakin hapus data?')">Hapus</a>
+                    <a href="hapus.php?id=<?= $row['id'] ?>" onclick="return confirm('Yakin hapus data?')">Hapus</a>
                 </td>
             </tr>
         <?php
@@ -103,7 +108,7 @@ $data = mysqli_query($conn, $query);
         } else {
         ?>
             <tr>
-                <td colspan="7" style="text-align:center;">Data tidak ditemukan</td>
+                <td colspan="8" style="text-align:center;">Data tidak ditemukan</td>
             </tr>
         <?php } ?>
         </tbody>

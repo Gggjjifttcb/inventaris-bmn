@@ -1,5 +1,4 @@
 <?php
-
 include "../config/koneksi.php";
 
 if (!isset($_SESSION['login'])) {
@@ -8,22 +7,38 @@ if (!isset($_SESSION['login'])) {
 }
 
 $id = intval($_GET['id']);
-
-// Ambil data inventaris
 $data = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM inventaris WHERE id=$id"));
 $ruang_id = $data['ruang_id'];
-
-// Ambil nama ruang
 $ruangData = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM ruang WHERE id=$ruang_id"));
 
-// Update data
-if (isset($_POST['update'])) {
+if(isset($_POST['update'])){
+    $kode  = $_POST['kode'];
+    $nama  = $_POST['nama'];
+    $rak   = $_POST['rak'];
+    $baris = $_POST['baris'];
+    $box   = $_POST['box'];
+
+    $image = $data['image']; // default tetap gambar lama
+    if(isset($_FILES['image']['name']) && $_FILES['image']['name'] != ''){
+        $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+        $allowed = ['jpg','jpeg','png','gif'];
+        if(in_array(strtolower($ext), $allowed)){
+            $image = time().'_'.$_FILES['image']['name'];
+            move_uploaded_file($_FILES['image']['tmp_name'], '../uploads/'.$image);
+            // hapus gambar lama
+            if(file_exists('../uploads/'.$data['image'])){
+                unlink('../uploads/'.$data['image']);
+            }
+        }
+    }
+
     mysqli_query($conn, "UPDATE inventaris SET
-        kode  = '$_POST[kode]',
-        nama  = '$_POST[nama]',
-        rak   = '$_POST[rak]',
-        baris = '$_POST[baris]',
-        box   = '$_POST[box]'
+        kode='$kode',
+        nama='$nama',
+        rak='$rak',
+        baris='$baris',
+        box='$box',
+        image='$image'
         WHERE id=$id
     ");
     header("Location: index.php?ruang_id=$ruang_id");
@@ -43,7 +58,7 @@ if (isset($_POST['update'])) {
         <h2>Edit Inventaris Ruang <?= $ruangData['nama_ruang'] ?? '' ?></h2>
     </div>
 
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <label>Kode Barang</label>
         <input type="text" name="kode" value="<?= $data['kode'] ?>" required>
 
@@ -58,6 +73,12 @@ if (isset($_POST['update'])) {
 
         <label>Box</label>
         <input type="text" name="box" value="<?= $data['box'] ?>" required>
+
+        <label>Gambar (jpg/png/gif)</label>
+        <?php if(!empty($data['image']) && file_exists('../uploads/'.$data['image'])): ?>
+            <img src="../uploads/<?= $data['image'] ?>" width="50"><br>
+        <?php endif; ?>
+        <input type="file" name="image" accept="image/*">
 
         <button type="submit" name="update">Update Data</button>
     </form>
