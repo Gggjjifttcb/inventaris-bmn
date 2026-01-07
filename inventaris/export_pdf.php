@@ -21,17 +21,44 @@ class PDF extends FPDF
         $this->Image('../assets/logo1.png',175,10,25);
 
         // Judul Kop
-        $this->SetFont('Arial','B',14);
+        $this->SetFont('Arial','B',12);
         $this->Cell(0,7,'KEMENTERIAN PARIWISATA REPUBLIK INDONESIA',0,1,'C');
 
-        $this->SetFont('Arial','B',12);
+        $this->SetFont('Arial','B',14);
         $this->Cell(0,7,'POLITEKNIK PARIWISATA LOMBOK',0,1,'C');
 
+        // Alamat & kontak
         $this->SetFont('Arial','',10);
-        $this->MultiCell(0,5,"Jalan Raden Puguh No. 1, Puyung, Jonggat,\nPraya, Lombok Tengah, Provinsi Nusa Tenggara Barat 83561\nTelepon (+62-0370) 6158029; Faksimile (+62 0370) 6158030\nLaman: www.ppl.ac.id  Posel: info@ppl.ac.id",0,'C');
+        $this->MultiCell(0,5,"Jalan Raden Puguh No. 1, Puyung, Jonggat,\nPraya, Lombok Tengah, Provinsi Nusa Tenggara Barat 83561\nTelepon (+62-0370) 6158029; Faksimile (+62 0370) 6158030",0,'C');
+
+        // Baris link simetris di tengah
+        $this->Ln(2);
+        $this->SetFont('Arial','',10);
+        $this->SetTextColor(0,0,0);
+// Naikkan posisi: ambil posisi sekarang dan kurangi beberapa unit
+        $this->SetY($this->GetY() - 2); // naik 3 mm    
+        // Hitung total lebar teks untuk posisi X agar tepat di tengah
+        $text1 = "Laman: ";
+        $text2 = "www.ppl.ac.id";
+        $text3 = "  Posel: ";
+        $text4 = "info@ppl.ac.id";
+
+        $totalWidth = $this->GetStringWidth($text1.$text2.$text3.$text4);
+        $this->SetX(($this->w - $totalWidth)/2); // posisi tengah
+
+        // Tulis teks satu baris, link biru untuk www.ppl.ac.id dan email
+        $this->Write(5, $text1);
+        $this->SetTextColor(0,0,255);
+        $this->Write(5, $text2, 'http://www.ppl.ac.id');
+        $this->SetTextColor(0,0,0);
+        $this->Write(5, $text3);
+        $this->SetTextColor(0,0,255);
+        $this->Write(5, $text4, 'mailto:info@ppl.ac.id');
+        $this->SetTextColor(0,0,0);
+
+        $this->Ln(10);
 
         // Garis
-        $this->Ln(3);
         $this->SetLineWidth(0.8);
         $this->Line(10,45,200,45);
         $this->SetLineWidth(0.2);
@@ -41,13 +68,14 @@ class PDF extends FPDF
     }
 }
 
+
 // Membuat PDF
 $pdf = new PDF();
 $pdf->AddPage();
 
 // Judul Laporan
 $pdf->SetFont('Arial','B',16);
-$pdf->Cell(0,10,'Inventaris Ruang '.$ruangData['nama_ruang'],0,1,'C');
+$pdf->Cell(0,10,'Inventaris  '.$ruangData['nama_ruang'],0,1,'C');
 $pdf->Ln(5);
 
 // Lebar kolom sesuai index.php
