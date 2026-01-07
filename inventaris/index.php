@@ -99,7 +99,8 @@ $data = mysqli_query($conn, $query);
                     <?php endif; ?>
                 </td>
                 <td class="action">
-                    <a href="edit.php?id=<?= $row['id'] ?>">Edit</a>
+                    <a href="preview.php?id=<?= $row['id'] ?>" class="btn">Preview</a>
+                    <a href="edit.php?id=<?= $row['id'] ?>" class="btn">Edit</a>
                     <a href="hapus.php?id=<?= $row['id'] ?>" onclick="return confirm('Yakin hapus data?')">Hapus</a>
                 </td>
             </tr>
