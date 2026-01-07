@@ -42,7 +42,7 @@ $qRuang = mysqli_query($conn, "SELECT * FROM ruang ORDER BY nama_ruang ASC");
 
 <!-- ================= NAVBAR ================= -->
 <div class="navbar">
-    <h1>Inventaris BMN</h1>
+    <h1>Inventaris Arsip</h1>
     <div>
        <a href="ruang/index.php" class="btn btn-ruang">Data Ruang</a>
 <a href="auth/logout.php" class="btn btn-logout">Logout</a>
@@ -54,9 +54,9 @@ $qRuang = mysqli_query($conn, "SELECT * FROM ruang ORDER BY nama_ruang ASC");
 
     <!-- ================= PENJELASAN WEB ================= -->
     <div class="info-box">
-        <h2>Sistem Inventaris BMN</h2>
+        <h2>Sistem Inventaris Arsip</h2>
         <p>
-            Sistem Inventaris BMN merupakan aplikasi berbasis web yang digunakan
+            Sistem Inventaris Arsip merupakan aplikasi berbasis web yang digunakan
             untuk mencatat, mengelola, dan memantau Barang Milik Negara (BMN)
             berdasarkan lokasi ruang penyimpanan.
         </p>
