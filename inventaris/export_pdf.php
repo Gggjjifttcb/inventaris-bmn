@@ -6,6 +6,7 @@ ini_set('display_errors', 0);
 include "../config/koneksi.php";
 require('fpdf/fpdf.php');
 
+session_start();
 if (!isset($_SESSION['login'])) {
     header("Location: ../auth/login.php");
     exit;
@@ -46,25 +47,41 @@ class PDF extends FPDF
         $this->Ln(10);
     }
 
-    /* ========= ROW DINAMIS (TINGGI IKUT GAMBAR) ========= */
-    function Row($data, $widths, $aligns, $imagePath = null)
+    /* ===== Fungsi header tabel ===== */
+    function HeaderTable($kolom, $widths)
+    {
+        $this->SetFont('Arial','B',11); // header bold
+        $lineHeight = 8;
+        foreach ($kolom as $j => $w) {
+            $this->Cell($w, $lineHeight, $j, 1, 0, 'C');
+        }
+        $this->Ln();
+    }
+
+    /* ========= ROW DINAMIS ========= */
+    function Row($data, $widths, $aligns, $imagePath = null, $kolomHeader = null)
     {
         $lineHeight = 7;
-        $minImageHeight = 30; // 🔥 tinggi gambar target (mm)
+        $minImageHeight = 30;
 
-        // Hitung tinggi dari teks
+        // Hitung tinggi teks
         $nb = 0;
         for ($i=0; $i<count($data); $i++) {
             $nb = max($nb, $this->NbLines($widths[$i], $data[$i]));
         }
         $textHeight = $lineHeight * $nb;
-
-        // Tinggi baris = teks ATAU gambar (mana yang lebih besar)
         $rowHeight = max($textHeight, $minImageHeight);
 
-        if ($this->GetY() + $rowHeight > $this->PageBreakTrigger)
+        // Page break
+        if ($this->GetY() + $rowHeight > $this->PageBreakTrigger) {
             $this->AddPage($this->CurOrientation);
+            if ($kolomHeader) {
+                $this->HeaderTable($kolomHeader, $widths);
+            }
+        }
 
+        // Isi row
+        $this->SetFont('Arial','',11); // data normal
         for ($i=0; $i<count($data); $i++) {
 
             $w = $widths[$i];
@@ -72,28 +89,19 @@ class PDF extends FPDF
             $x = $this->GetX();
             $y = $this->GetY();
 
-            // Border
             $this->Rect($x, $y, $w, $rowHeight);
 
-            // === GAMBAR ===
             if ($i == count($data)-1 && $imagePath && file_exists($imagePath)) {
-
                 list($imgWpx, $imgHpx) = getimagesize($imagePath);
-
                 $maxW = $w - 6;
                 $maxH = $rowHeight - 6;
-
                 $ratio = min($maxW/$imgWpx, $maxH/$imgHpx);
-
                 $imgW = $imgWpx * $ratio;
                 $imgH = $imgHpx * $ratio;
-
                 $imgX = $x + ($w - $imgW) / 2;
                 $imgY = $y + ($rowHeight - $imgH) / 2;
-
                 $this->Image($imagePath, $imgX, $imgY, $imgW, $imgH);
-            }
-            else {
+            } else {
                 $this->MultiCell($w, $lineHeight, $data[$i], 0, $a);
             }
 
@@ -149,17 +157,13 @@ $kolom = [
     'Gambar' => 50
 ];
 
-$pdf->SetFont('Arial','B',12);
-foreach ($kolom as $j => $w) {
-    $pdf->Cell($w,10,$j,1,0,'C');
-}
-$pdf->Ln();
-
-$pdf->SetFont('Arial','',11);
-
 $widths = array_values($kolom);
 $aligns = ['C','C','L','C','C','C','C'];
 
+// Header tabel pertama
+$pdf->HeaderTable($kolom, $widths);
+
+// Tulis data
 $no = 1;
 while ($row = mysqli_fetch_assoc($data)) {
 
@@ -175,7 +179,7 @@ while ($row = mysqli_fetch_assoc($data)) {
         $row['baris'],
         $row['box'],
         ''
-    ], $widths, $aligns, $imagePath);
+    ], $widths, $aligns, $imagePath, $kolom);
 }
 
 ob_end_clean();
