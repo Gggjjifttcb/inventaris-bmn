@@ -35,7 +35,7 @@ $qRuang = mysqli_query($conn, "SELECT * FROM ruang ORDER BY nama_ruang ASC");
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard Inventaris BMN</title>
+    <title>Dashboard Inventaris Arsip</title>
     <link rel="stylesheet" href="assets/css/dashboard.css">
 </head>
 <body>
