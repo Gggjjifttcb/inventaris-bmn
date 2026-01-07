@@ -22,18 +22,18 @@ if (isset($_POST['update'])) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Edit Ruang</title>
+    <title>Edit </title>
     <link rel="stylesheet" href="../assets/css/ruang.css">
 </head>
 <body>
 
 <div class="header">
-    <a href="index.php" class="btn-back">← Data Ruang</a>
-    <h2>Edit Ruang</h2>
+    <a href="index.php" class="btn-back">← Data Tahun</a>
+    <h2>Edit </h2>
 </div>
 
 <form method="post" class="form-box">
-    <label>Nama Ruang</label>
+    <label>Tahun</label>
     <input type="text" name="nama_ruang" value="<?= $data['nama_ruang'] ?>" required>
 
     <label>Keterangan</label>

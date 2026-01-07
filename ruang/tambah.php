@@ -12,18 +12,18 @@ if (isset($_POST['simpan'])) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Tambah Ruang</title>
+    <title>Tambah</title>
     <link rel="stylesheet" href="../assets/css/ruang.css">
 </head>
 <body>
 
 <div class="header">
-    <a href="index.php" class="btn-back">← Data Ruang</a>
-    <h2>Tambah Ruang</h2>
+    <a href="index.php" class="btn-back">← Data Tahun</a>
+    <h2>Tambah </h2>
 </div>
 
 <form method="post" class="form-box">
-    <label>Nama Ruang</label>
+    <label>Tahun</label>
     <input type="text" name="nama_ruang" required>
 
     <label>Keterangan</label>

@@ -24,7 +24,7 @@ class PDF extends FPDF
 
         $this->SetFont('Arial','B',12);
         $this->Cell(0,7,'KEMENTERIAN PARIWISATA REPUBLIK INDONESIA',0,1,'C');
-        $this->SetFont('Arial','B',14);
+        $this->SetFont('Arial','B',16);
         $this->Cell(0,7,'POLITEKNIK PARIWISATA LOMBOK',0,1,'C');
 
         $this->SetFont('Arial','',10);
@@ -146,7 +146,7 @@ $kolom = [
     'Rak' => 15,
     'Baris' => 15,
     'Box' => 15,
-    'Gambar' => 30
+    'Gambar' => 50
 ];
 
 $pdf->SetFont('Arial','B',12);

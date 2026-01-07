@@ -6,21 +6,21 @@ $data = mysqli_query($conn, "SELECT * FROM ruang ORDER BY id DESC");
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Data Ruang</title>
+    <title>Data Tahun</title>
     <link rel="stylesheet" href="../assets/css/ruang.css">
 </head>
 <body>
 
 <div class="header">
     <a href="../dashboard.php" class="btn-back">← Dashboard</a>
-    <h2>Data Ruang</h2>
-    <a href="tambah.php" class="btn">+ Tambah Ruang</a>
+    <h2>Data Tahun</h2>
+    <a href="tambah.php" class="btn">+ Tambah </a>
 </div>
 
 <table>
     <tr>
         <th>No</th>
-        <th>Nama Ruang</th>
+        <th>Tahun</th>
         <th>Keterangan</th>
         <th>Aksi</th>
     </tr>

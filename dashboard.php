@@ -44,7 +44,7 @@ $qRuang = mysqli_query($conn, "SELECT * FROM ruang ORDER BY nama_ruang ASC");
 <div class="navbar">
     <h1>Inventaris Arsip</h1>
     <div>
-       <a href="ruang/index.php" class="btn btn-ruang">Data Ruang</a>
+       <a href="ruang/index.php" class="btn btn-ruang">Data Tahun</a>
 <a href="auth/logout.php" class="btn btn-logout">Logout</a>
     </div>
 </div>
@@ -70,7 +70,7 @@ $qRuang = mysqli_query($conn, "SELECT * FROM ruang ORDER BY nama_ruang ASC");
     <!-- ================= CARD STATISTIK ================= -->
   
     <!-- ================= DATA RUANG ================= -->
-    <h2 style="margin-top:40px;">Data Ruang</h2>
+    <h2 style="margin-top:40px;">Data Tahun</h2>
 
     <div class="cards">
         <?php if (mysqli_num_rows($qRuang) > 0) { ?>
@@ -85,7 +85,7 @@ $qRuang = mysqli_query($conn, "SELECT * FROM ruang ORDER BY nama_ruang ASC");
                 </div>
             <?php } ?>
         <?php } else { ?>
-            <p>Belum ada data ruang.</p>
+            <p>Belum ada data .</p>
         <?php } ?>
     </div>
 
@@ -93,7 +93,7 @@ $qRuang = mysqli_query($conn, "SELECT * FROM ruang ORDER BY nama_ruang ASC");
 
 <!-- ================= FOOTER ================= -->
 <div class="footer">
-    © <?= date('Y') ?> Sistem Inventaris BMN
+    © <?= date('Y') ?> Sistem Inventaris Arsip
 </div>
 
 </body>
