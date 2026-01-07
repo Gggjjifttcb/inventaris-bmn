@@ -16,7 +16,7 @@ $totalBarang = mysqli_fetch_assoc($qBarang)['total'];
 $qRak = mysqli_query($conn, "SELECT COUNT(DISTINCT rak) AS total FROM inventaris");
 $totalRak = mysqli_fetch_assoc($qRak)['total'];
 
-// Total baris
+// Total baris 
 $qBaris = mysqli_query($conn, "SELECT COUNT(DISTINCT baris) AS total FROM inventaris");
 $totalBaris = mysqli_fetch_assoc($qBaris)['total'];
 
