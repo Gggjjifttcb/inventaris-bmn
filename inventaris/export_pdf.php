@@ -179,5 +179,5 @@ while ($row = mysqli_fetch_assoc($data)) {
 }
 
 ob_end_clean();
-$pdf->Output('D','Inventaris_Ruang_'.$ruangData['nama_ruang'].'.pdf');
+$pdf->Output('D','Inventaris_Tahun_'.$ruangData['nama_ruang'].'.pdf');
 exit;
