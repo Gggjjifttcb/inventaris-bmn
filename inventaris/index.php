@@ -61,7 +61,7 @@ $data = mysqli_query($conn, $query);
                style="padding:8px 12px;border-radius:6px;border:1px solid #ccc; flex:1;">
         <button type="submit" class="btn">Cari</button>
         <a href="index.php?ruang_id=<?= $ruang_id ?>" class="btn btn-back" style="background:#6c757d;">Reset</a>
-        <a href="export_pdf.php?ruang_id=<?= $ruang_id ?>" class="btn" style="background:#28a745;">📄 Export PDF</a>
+        <a href="export_pdf.php?ruang_id=<?= $ruang_id ?>" class="btn" style="background:#28a745;;">📄 Export PDF</a>
     </form>
 
     <!-- TABEL -->

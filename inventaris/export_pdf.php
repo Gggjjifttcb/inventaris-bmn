@@ -136,7 +136,7 @@ $pdf = new PDF();
 $pdf->AddPage();
 
 $pdf->SetFont('Arial','B',16);
-$pdf->Cell(0,10,'Inventaris '.$ruangData['nama_ruang'],0,1,'C');
+$pdf->Cell(0,10,'Inventaris Tahun '.$ruangData['nama_ruang'],0,1,'C');
 $pdf->Ln(5);
 
 $kolom = [
