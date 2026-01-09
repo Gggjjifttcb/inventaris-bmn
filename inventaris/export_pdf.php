@@ -32,7 +32,7 @@ class PDF extends FPDF
         $this->MultiCell(0,5,
             "Jalan Raden Puguh No. 1, Puyung, Jonggat\n".
             "Praya, Lombok Tengah, Nusa Tenggara Barat 83561\n".
-            "Telp (0370) 6158029 | Fax (0370) 6158030",
+            "Telepon (+62-0370) 6158029 | Fax (+62 0370) 6158030",
             0,'C'
         );
 
