@@ -34,6 +34,7 @@ if(isset($_POST['update'])){
 
     mysqli_query($conn, "UPDATE inventaris SET
         kode='$kode',
+        tahun='$_POST[tahun]',
         nama='$nama',
         rak='$rak',
         baris='$baris',
@@ -59,12 +60,15 @@ if(isset($_POST['update'])){
     </div>
 
     <form method="post" enctype="multipart/form-data">
-        <label>Kode Barang</label>
+        <label>Kode Klasifikasi</label>
         <input type="text" name="kode" value="<?= $data['kode'] ?>" required>
 
-        <label>Nama Barang</label>
-        <input type="text" name="nama" value="<?= $data['nama'] ?>" required>
+        <label>Tahun</label>
+        <input type="text" name="tahun" value="<?= $data['tahun'] ?>" required>
 
+        <label>Nama Arsip</label>
+        <input type="text" name="nama" value="<?= $data['nama'] ?>" required>
+    
         <label>Rak</label>
         <input type="text" name="rak" value="<?= $data['rak'] ?>" required>
 

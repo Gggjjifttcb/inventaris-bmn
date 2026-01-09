@@ -112,7 +112,7 @@ $ruangData = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM ruang WHERE i
 
     <p><strong>Kode:</strong> <?= htmlspecialchars($data['kode']) ?></p>
     <p><strong>Nama Barang:</strong> <?= htmlspecialchars($data['nama']) ?></p>
-    <p><strong>Tahun:</strong> <?= htmlspecialchars($ruangData['nama_ruang'] ?? '-') ?></p>
+    <p><strong>Tahun:</strong> <?= htmlspecialchars($data['tahun'] ?? '-') ?></p>
     <p><strong>Rak:</strong> <?= htmlspecialchars($data['rak']) ?></p>
     <p><strong>Baris:</strong> <?= htmlspecialchars($data['baris']) ?></p>
     <p><strong>Box:</strong> <?= htmlspecialchars($data['box']) ?></p>

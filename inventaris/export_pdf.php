@@ -30,9 +30,9 @@ class PDF extends FPDF
 
         $this->SetFont('Arial','',10);
         $this->MultiCell(0,5,
-            "Jalan Raden Puguh No. 1, Puyung, Jonggat\n".
+            "Jalan Raden Puguh No. 1, Puyung, Jonggat,\n".
             "Praya, Lombok Tengah, Nusa Tenggara Barat 83561\n".
-            "Telepon (+62-0370) 6158029 | Fax (+62 0370) 6158030",
+            "Telepon (+62-0370) 6158029; Fax (+62 0370) 6158030",
             0,'C'
         );
 
@@ -150,15 +150,16 @@ $pdf->Ln(5);
 $kolom = [
     'No' => 10,
     'Kode' => 30,
-    'Nama Barang' => 55,
+    'Tahun' => 15,
+    'Nama Arsip' => 40,
     'Rak' => 15,
-    'Baris' => 15,
     'Box' => 15,
+    'No. Berkas' => 23,
     'Gambar' => 50
 ];
 
 $widths = array_values($kolom);
-$aligns = ['C','C','L','C','C','C','C'];
+$aligns = ['C','C','C','L','C','C','C','C'];
 
 // Header tabel pertama
 $pdf->HeaderTable($kolom, $widths);
@@ -174,6 +175,7 @@ while ($row = mysqli_fetch_assoc($data)) {
     $pdf->Row([
         $no++,
         $row['kode'],
+        $row['tahun'],
         $row['nama'],
         $row['rak'],
         $row['baris'],

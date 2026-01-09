@@ -34,7 +34,7 @@ if (isset($_POST['login'])) {
 <body>
 
 <div class="login-card">
-    <div class="login-title">Login Inventaris BMN</div>
+    <div class="login-title">Data Arsi</div>
 
     <?php if (isset($error)) { ?>
         <div class="alert"><?= $error ?></div>

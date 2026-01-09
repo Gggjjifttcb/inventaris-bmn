@@ -1,35 +1,30 @@
 <?php
 include "../config/koneksi.php";
 
-if (!isset($_SESSION['login'])) {
-    header("Location: ../auth/login.php");
-    exit;
-}
-
-// Ambil ruang_id dari URL
 $ruang_id = isset($_GET['ruang_id']) ? intval($_GET['ruang_id']) : 0;
 
-// Ambil nama ruang
+// Ambil data ruang
 $ruangData = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM ruang WHERE id=$ruang_id"));
 
-// Ambil search keyword
-$keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
+// Ambil filter
+$nama  = isset($_GET['nama']) ? mysqli_real_escape_string($conn, $_GET['nama']) : '';
+$tahun = isset($_GET['tahun']) ? mysqli_real_escape_string($conn, $_GET['tahun']) : '';
+$rak   = isset($_GET['rak']) ? mysqli_real_escape_string($conn, $_GET['rak']) : '';
+$box   = isset($_GET['box']) ? mysqli_real_escape_string($conn, $_GET['box']) : '';
 
 // Query inventaris
-if ($keyword != '') {
-    $query = "SELECT * FROM inventaris 
-              WHERE ruang_id = $ruang_id
-                AND (kode LIKE '%$keyword%' 
-                     OR nama LIKE '%$keyword%'
-                     OR rak LIKE '%$keyword%'
-                     OR baris LIKE '%$keyword%'
-                     OR box LIKE '%$keyword%')
-              ORDER BY id DESC";
-} else {
-    $query = "SELECT * FROM inventaris 
-              WHERE ruang_id = $ruang_id
-              ORDER BY id DESC";
-}
+$query = "SELECT inv.*, r.nama_ruang 
+          FROM inventaris inv
+          LEFT JOIN ruang r ON inv.ruang_id = r.id
+          WHERE 1=1";
+
+if($ruang_id) $query .= " AND inv.ruang_id = $ruang_id";
+if($nama != '')  $query .= " AND inv.nama LIKE '%$nama%'";
+if($tahun != '') $query .= " AND inv.tahun = '$tahun'";
+if($rak != '')   $query .= " AND inv.rak LIKE '%$rak%'";
+if($box != '')   $query .= " AND inv.box LIKE '%$box%'";
+
+$query .= " ORDER BY inv.id DESC";
 
 $data = mysqli_query($conn, $query);
 ?>
@@ -37,7 +32,7 @@ $data = mysqli_query($conn, $query);
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Inventaris Ruang <?= $ruangData['nama_ruang'] ?? '' ?></title>
+    <title>Inventaris <?= $ruangData['nama_ruang'] ?? '' ?></title>
     <link rel="stylesheet" href="../assets/css/ruang.css">
 </head>
 <body>
@@ -45,35 +40,42 @@ $data = mysqli_query($conn, $query);
 <div class="header">
     <div class="header-left">
         <a href="../dashboard.php" class="btn-back">← Dashboard</a>
-        <h2>Inventaris Arsip  <?= $ruangData['nama_ruang'] ?? '' ?></h2>
+        <h2>Inventaris <?= $ruangData['nama_ruang'] ?? '' ?></h2>
     </div>
     <a href="tambah.php?ruang_id=<?= $ruang_id ?>" class="btn">+ Tambah Data</a>
 </div>
 
 <div class="table-wrapper">
-    <!-- FORM SEARCH -->
     <form method="get" style="display:flex; gap:10px; margin-bottom:15px;">
         <input type="hidden" name="ruang_id" value="<?= $ruang_id ?>">
-        <input type="text"
-               name="search"
-               placeholder="Cari kode, nama, rak, baris, box..."
-               value="<?= htmlspecialchars($keyword) ?>"
-               style="padding:8px 12px;border-radius:6px;border:1px solid #ccc; flex:1;">
+        <input type="text" name="nama" placeholder="Nama Arsip" value="<?= htmlspecialchars($nama) ?>" style="padding:8px 12px;border-radius:6px;border:1px solid #ccc; flex:1;">
+        <input type="text" name="rak" placeholder="Rak" value="<?= htmlspecialchars($rak) ?>" style="padding:8px 12px;border-radius:6px;border:1px solid #ccc; width:80px;">
+        <input type="text" name="box" placeholder="Box" value="<?= htmlspecialchars($box) ?>" style="padding:8px 12px;border-radius:6px;border:1px solid #ccc; width:80px;">
+        <select name="tahun" style="padding:8px 12px;border-radius:6px;border:1px solid #ccc;">
+            <option value="">-- Pilih Tahun --</option>
+            <?php
+            $qTahun = mysqli_query($conn, "SELECT DISTINCT tahun FROM inventaris ORDER BY tahun ASC");
+            while($t = mysqli_fetch_assoc($qTahun)){
+                $sel = $tahun == $t['tahun'] ? 'selected' : '';
+                echo '<option value="'.$t['tahun'].'" '.$sel.'>'.$t['tahun'].'</option>';
+            }
+            ?>
+        </select>
         <button type="submit" class="btn">Cari</button>
         <a href="index.php?ruang_id=<?= $ruang_id ?>" class="btn btn-back" style="background:#6c757d;">Reset</a>
-        <a href="export_pdf.php?ruang_id=<?= $ruang_id ?>" class="btn" style="background:#28a745;;">📄 Export PDF</a>
+        <a href="export_pdf.php?ruang_id=<?= $ruang_id ?>" class="btn" style="background:#28a745;">📄 Export PDF</a>
     </form>
 
-    <!-- TABEL -->
     <table>
         <thead>
             <tr>
                 <th>No</th>
-                <th>Kode</th>
-                <th>Nama Barang</th>
+                <th>Kode Klasifikasi</th>
+                <th>Tahun</th>
+                <th>Nama Arsip</th>
                 <th>Rak</th>
-                <th>Baris</th>
                 <th>Box</th>
+                <th>No.Berkas</th>
                 <th>Gambar</th>
                 <th>Aksi</th>
             </tr>
@@ -81,12 +83,13 @@ $data = mysqli_query($conn, $query);
         <tbody>
         <?php
         $no = 1;
-        if (mysqli_num_rows($data) > 0) {
-            while ($row = mysqli_fetch_assoc($data)) {
+        if(mysqli_num_rows($data) > 0){
+            while($row = mysqli_fetch_assoc($data)){
         ?>
             <tr>
                 <td><?= $no++ ?></td>
                 <td><?= $row['kode'] ?></td>
+                <td><?= $row['tahun'] ?></td>
                 <td><?= $row['nama'] ?></td>
                 <td><?= $row['rak'] ?></td>
                 <td><?= $row['baris'] ?></td>
@@ -101,15 +104,12 @@ $data = mysqli_query($conn, $query);
                 <td class="action">
                     <a href="preview.php?id=<?= $row['id'] ?>" class="btn">Preview</a>
                     <a href="edit.php?id=<?= $row['id'] ?>" class="btn">Edit</a>
-                    <a href="hapus.php?id=<?= $row['id'] ?>" onclick="return confirm('Yakin hapus data?')">Hapus</a>
+                    <a href="hapus.php?id=<?= $row['id'] ?>" class="btn hapus" onclick="return confirm('Yakin hapus data?')">Hapus</a>
                 </td>
             </tr>
-        <?php
-            }
-        } else {
-        ?>
+        <?php }} else { ?>
             <tr>
-                <td colspan="8" style="text-align:center;">Data tidak ditemukan</td>
+                <td colspan="9" style="text-align:center;">Data tidak ditemukan</td>
             </tr>
         <?php } ?>
         </tbody>
