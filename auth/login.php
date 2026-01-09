@@ -28,13 +28,13 @@ if (isset($_POST['login'])) {
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Login Inventaris BMN</title>
+    <title>Login Data Arsip Inactive</title>
     <link rel="stylesheet" href="../assets/css/login.css">
 </head>
 <body>
 
 <div class="login-card">
-    <div class="login-title">Data Arsi</div>
+    <div class="login-title">Data Arsip Inactive</div>
 
     <?php if (isset($error)) { ?>
         <div class="alert"><?= $error ?></div>
@@ -55,7 +55,7 @@ if (isset($_POST['login'])) {
     </form>
 
     <div class="footer-text">
-        © <?= date('Y') ?> Inventaris BMN
+        © <?= date('Y') ?> Data Arsip Inactive
     </div>
 </div>
 

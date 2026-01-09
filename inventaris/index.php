@@ -40,7 +40,7 @@ $data = mysqli_query($conn, $query);
 <div class="header">
     <div class="header-left">
         <a href="../dashboard.php" class="btn-back">← Dashboard</a>
-        <h2>Inventaris <?= $ruangData['nama_ruang'] ?? '' ?></h2>
+        <h2>Data Arsip Inactive <?= $ruangData['nama_ruang'] ?? '' ?></h2>
     </div>
     <a href="tambah.php?ruang_id=<?= $ruang_id ?>" class="btn">+ Tambah Data</a>
 </div>

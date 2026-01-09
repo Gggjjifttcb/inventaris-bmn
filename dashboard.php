@@ -13,13 +13,13 @@ $qRuang = mysqli_query($conn, "SELECT * FROM ruang ORDER BY nama_ruang ASC");
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard Inventaris Arsip</title>
+    <title>Dashboard Data Arsip Inactive</title>
     <link rel="stylesheet" href="assets/css/dashboard.css">
 </head>
 <body>
 
 <div class="navbar">
-    <h1>Inventaris Arsip</h1>
+    <h1>Data Arsip Inactive</h1>
     <div>
         <a href="auth/logout.php" class="btn btn-logout">Logout</a>
         <a href="ruang/index.php" class="btn btn-ruang">Tahun</a>
@@ -27,7 +27,7 @@ $qRuang = mysqli_query($conn, "SELECT * FROM ruang ORDER BY nama_ruang ASC");
 </div>
 
 <div class="container">
-<h2 style="margin-top:40px;">Pencarian Inventaris</h2>
+<h2 style="margin-top:40px;">Pencarian Arsip Inactive</h2>
     <div class="form-box">
         <form method="get" action="inventaris/index.php" style="display:flex; gap:10px; flex-wrap: wrap;">
             <input type="text" name="nama" placeholder="Nama Arsip" style="padding:8px 12px;border-radius:6px;border:1px solid #ccc;flex:1;">
@@ -46,18 +46,18 @@ $qRuang = mysqli_query($conn, "SELECT * FROM ruang ORDER BY nama_ruang ASC");
             <input type="text" name="box" placeholder="Box" style="padding:8px 12px;border-radius:6px;border:1px solid #ccc;width:80px;">
             
             <button type="submit" class="btn">Cari</button>
-            <a href="inventaris/index.php" class="btn btn-back" style="background:#6c757d;">Reset</a>
+            
         </form>
     </div>
     <br>
-    <h2>Data Tahun / Ruang</h2>
+    <h2>Data Tahun</h2>
     <div class="cards">
         <?php if (mysqli_num_rows($qRuang) > 0): ?>
             <?php while($r = mysqli_fetch_assoc($qRuang)): ?>
                 <div class="card ruang-card">
                     <h3><?= $r['nama_ruang'] ?></h3>
                     <p><?= $r['keterangan'] ?></p>
-                    <a href="inventaris/index.php?ruang_id=<?= $r['id'] ?>" class="btn">Lihat Inventaris</a>
+                    <a href="inventaris/index.php?ruang_id=<?= $r['id'] ?>" class="btn">Lihat </a>
                 </div>
             <?php endwhile; ?>
         <?php else: ?>
@@ -69,7 +69,7 @@ $qRuang = mysqli_query($conn, "SELECT * FROM ruang ORDER BY nama_ruang ASC");
 </div>
 
 <div class="footer">
-    © <?= date('Y') ?> Sistem Inventaris Arsip
+    © <?= date('Y') ?> Sistem Inventaris Arsip Inactive
 </div>
 
 </body>
