@@ -12,10 +12,40 @@ if (!isset($_SESSION['login'])) {
     exit;
 }
 
+/* ================= AMBIL PARAMETER ================= */
 $ruang_id = isset($_GET['ruang_id']) ? intval($_GET['ruang_id']) : 0;
-$ruangData = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM ruang WHERE id=$ruang_id"));
-$data = mysqli_query($conn, "SELECT * FROM inventaris WHERE ruang_id=$ruang_id ORDER BY id ASC");
 
+$nama  = isset($_GET['nama'])  ? mysqli_real_escape_string($conn, $_GET['nama'])  : '';
+$tahun = isset($_GET['tahun']) ? mysqli_real_escape_string($conn, $_GET['tahun']) : '';
+$rak   = isset($_GET['rak'])   ? mysqli_real_escape_string($conn, $_GET['rak'])   : '';
+$box   = isset($_GET['box'])   ? mysqli_real_escape_string($conn, $_GET['box'])   : '';
+
+/* ================= DATA RUANG ================= */
+$ruangData = mysqli_fetch_assoc(
+    mysqli_query($conn, "SELECT * FROM ruang WHERE id = $ruang_id")
+);
+
+/* ================= QUERY INVENTARIS ================= */
+$query = "SELECT * FROM inventaris WHERE ruang_id = $ruang_id";
+
+if ($nama != '') {
+    $query .= " AND nama LIKE '%$nama%'";
+}
+if ($tahun != '') {
+    $query .= " AND tahun = '$tahun'";
+}
+if ($rak != '') {
+    $query .= " AND rak LIKE '%$rak%'";
+}
+if ($box != '') {
+    $query .= " AND box LIKE '%$box%'";
+}
+
+$query .= " ORDER BY id ASC";
+
+$data = mysqli_query($conn, $query);
+
+/* ================= CLASS PDF ================= */
 class PDF extends FPDF
 {
     function Header()
@@ -25,87 +55,65 @@ class PDF extends FPDF
 
         $this->SetFont('Arial','B',12);
         $this->Cell(0,7,'KEMENTERIAN PARIWISATA REPUBLIK INDONESIA',0,1,'C');
+
         $this->SetFont('Arial','B',16);
         $this->Cell(0,7,'POLITEKNIK PARIWISATA LOMBOK',0,1,'C');
 
         $this->SetFont('Arial','',10);
         $this->MultiCell(0,5,
             "Jalan Raden Puguh No. 1, Puyung, Jonggat,\n".
-            "Praya, Lombok Tengah, Nusa Tenggara Barat 83561\n".
-            "Telepon (+62-0370) 6158029; Fax (+62 0370) 6158030",
+            "Praya, Lombok Tengah, NTB 83561\n".
+            "Telepon (+62-0370) 6158029",
             0,'C'
         );
 
-        $this->Ln(0);
-        $this->Cell(0,5,'Laman: www.ppl.ac.id | Posel: info@ppl.ac.id',0,1,'C');
-
         $this->Ln(3);
-        $this->SetLineWidth(0.8);
         $this->Line(10,45,200,45);
-        $this->SetLineWidth(0.2);
         $this->Line(10,46,200,46);
         $this->Ln(10);
     }
 
-    /* ===== Fungsi header tabel ===== */
     function HeaderTable($kolom, $widths)
     {
-        $this->SetFont('Arial','B',11); // header bold
-        $lineHeight = 8;
-        foreach ($kolom as $j => $w) {
-            $this->Cell($w, $lineHeight, $j, 1, 0, 'C');
+        $this->SetFont('Arial','B',10);
+        foreach ($kolom as $judul => $w) {
+            $this->Cell($w, 8, $judul, 1, 0, 'C');
         }
         $this->Ln();
     }
 
-    /* ========= ROW DINAMIS ========= */
     function Row($data, $widths, $aligns, $imagePath = null, $kolomHeader = null)
     {
-        $lineHeight = 7;
-        $minImageHeight = 30;
-
-        // Hitung tinggi teks
+        $lineHeight = 6;
         $nb = 0;
+
         for ($i=0; $i<count($data); $i++) {
             $nb = max($nb, $this->NbLines($widths[$i], $data[$i]));
         }
-        $textHeight = $lineHeight * $nb;
-        $rowHeight = max($textHeight, $minImageHeight);
 
-        // Page break
+        $rowHeight = max($lineHeight * $nb, 25);
+
         if ($this->GetY() + $rowHeight > $this->PageBreakTrigger) {
-            $this->AddPage($this->CurOrientation);
-            if ($kolomHeader) {
-                $this->HeaderTable($kolomHeader, $widths);
-            }
+            $this->AddPage();
+            $this->HeaderTable($kolomHeader, $widths);
         }
 
-        // Isi row
-        $this->SetFont('Arial','',11); // data normal
-        for ($i=0; $i<count($data); $i++) {
+        $this->SetFont('Arial','',10);
 
-            $w = $widths[$i];
-            $a = $aligns[$i] ?? 'L';
+        for ($i=0; $i<count($data); $i++) {
             $x = $this->GetX();
             $y = $this->GetY();
+            $w = $widths[$i];
 
             $this->Rect($x, $y, $w, $rowHeight);
 
             if ($i == count($data)-1 && $imagePath && file_exists($imagePath)) {
-                list($imgWpx, $imgHpx) = getimagesize($imagePath);
-                $maxW = $w - 6;
-                $maxH = $rowHeight - 6;
-                $ratio = min($maxW/$imgWpx, $maxH/$imgHpx);
-                $imgW = $imgWpx * $ratio;
-                $imgH = $imgHpx * $ratio;
-                $imgX = $x + ($w - $imgW) / 2;
-                $imgY = $y + ($rowHeight - $imgH) / 2;
-                $this->Image($imagePath, $imgX, $imgY, $imgW, $imgH);
+                $this->Image($imagePath, $x+2, $y+2, $w-4, $rowHeight-4);
             } else {
-                $this->MultiCell($w, $lineHeight, $data[$i], 0, $a);
+                $this->MultiCell($w, $lineHeight, $data[$i], 0, $aligns[$i]);
             }
 
-            $this->SetXY($x + $w, $y);
+            $this->SetXY($x+$w, $y);
         }
 
         $this->Ln($rowHeight);
@@ -117,8 +125,7 @@ class PDF extends FPDF
         $wmax = ($w - 2*$this->cMargin) * 1000 / $this->FontSize;
         $s = str_replace("\r",'',$txt);
         $nb = strlen($s);
-        $sep = -1;
-        $i = 0; $j = 0; $l = 0; $nl = 1;
+        $sep = -1; $i = 0; $j = 0; $l = 0; $nl = 1;
 
         while ($i < $nb) {
             $c = $s[$i];
@@ -139,32 +146,30 @@ class PDF extends FPDF
     }
 }
 
-/* ========= PDF ========= */
+/* ================= CETAK PDF ================= */
 $pdf = new PDF();
 $pdf->AddPage();
 
-$pdf->SetFont('Arial','B',16);
-$pdf->Cell(0,10,'Inventaris Tahun '.$ruangData['nama_ruang'],0,1,'C');
+$pdf->SetFont('Arial','B',14);
+$pdf->Cell(0,10,'Inventaris Ruang '.$ruangData['nama_ruang'],0,1,'C');
 $pdf->Ln(5);
 
 $kolom = [
     'No' => 10,
-    'Kode' => 30,
+    'Kode' => 25,
     'Tahun' => 15,
-    'Nama Arsip' => 40,
+    'Nama Arsip' => 45,
     'Rak' => 15,
     'Box' => 15,
-    'No. Berkas' => 23,
-    'Gambar' => 50
+    'No. Berkas' => 25,
+    'Gambar' => 40
 ];
 
 $widths = array_values($kolom);
 $aligns = ['C','C','C','L','C','C','C','C'];
 
-// Header tabel pertama
 $pdf->HeaderTable($kolom, $widths);
 
-// Tulis data
 $no = 1;
 while ($row = mysqli_fetch_assoc($data)) {
 
@@ -178,12 +183,12 @@ while ($row = mysqli_fetch_assoc($data)) {
         $row['tahun'],
         $row['nama'],
         $row['rak'],
-        $row['baris'],
         $row['box'],
+        $row['baris'],
         ''
     ], $widths, $aligns, $imagePath, $kolom);
 }
 
 ob_end_clean();
-$pdf->Output('D','Inventaris_Tahun_'.$ruangData['nama_ruang'].'.pdf');
+$pdf->Output('D','Inventaris_'.$ruangData['nama_ruang'].'.pdf');
 exit;

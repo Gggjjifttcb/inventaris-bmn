@@ -72,7 +72,8 @@ $data = mysqli_query($conn, $query);
             </select>
         <button type="submit" class="btn">Cari</button>
         <a href="index.php?ruang_id=<?= $ruang_id ?>" class="btn-back">Reset</a>
-        <a href="export_pdf.php?ruang_id=<?= $ruang_id ?>" class="btn" style="background:#28a745;">📄 Export PDF</a>
+<a href="export_pdf.php?ruang_id=<?= $ruang_id ?>&nama=<?= urlencode($nama) ?>&tahun=<?= urlencode($tahun) ?>&rak=<?= urlencode($rak) ?>&box=<?= urlencode($box) ?>"class="btn" style="background:#28a745;">📄 Export PDF</a>
+
     </form>
 
     <table>
