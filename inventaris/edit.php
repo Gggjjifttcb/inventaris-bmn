@@ -37,8 +37,8 @@ if(isset($_POST['update'])){
         tahun='$_POST[tahun]',
         nama='$nama',
         rak='$rak',
-        baris='$baris',
         box='$box',
+        baris='$baris',
         image='$image'
         WHERE id=$id
     ");
@@ -72,11 +72,11 @@ if(isset($_POST['update'])){
         <label>Rak</label>
         <input type="text" name="rak" value="<?= $data['rak'] ?>" required>
 
-        <label>Baris</label>
-        <input type="text" name="baris" value="<?= $data['baris'] ?>" required>
-
         <label>Box</label>
         <input type="text" name="box" value="<?= $data['box'] ?>" required>
+
+        <label>No. Berkas</label>
+        <input type="text" name="baris" value="<?= $data['baris'] ?>" required>
 
         <label>Gambar (jpg/png/gif)</label>
         <?php if(!empty($data['image']) && file_exists('../uploads/'.$data['image'])): ?>

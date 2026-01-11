@@ -1,65 +1,75 @@
 <?php
 include "../config/koneksi.php";
 
+
 if (!isset($_SESSION['login'])) {
     header("Location: ../auth/login.php");
     exit;
 }
 
-// Ambil ID inventaris dari URL
+// Ambil ID dari URL
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-
-// Ambil data inventaris
-$data = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM inventaris WHERE id=$id"));
-
-if (!$data) {
-    echo "Data tidak ditemukan.";
-    exit;
+if ($id <= 0) {
+    die("ID tidak valid");
 }
 
-// Ambil nama ruang
-$ruangData = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM ruang WHERE id=" . $data['ruang_id']));
+// Ambil data inventaris
+$qInventaris = mysqli_query($conn, "SELECT * FROM inventaris WHERE id = $id");
+$data = mysqli_fetch_assoc($qInventaris);
+
+if (!$data) {
+    die("Data tidak ditemukan");
+}
+
+// Ambil data ruang
+$ruangData = mysqli_fetch_assoc(
+    mysqli_query($conn, "SELECT * FROM ruang WHERE id = " . intval($data['ruang_id']))
+);
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Preview Inventaris <?= htmlspecialchars($data['nama']) ?></title>
+    <title>Preview Inventaris</title>
 
-    <!-- Panggil CSS utama -->
+    <!-- CSS utama -->
     <link rel="stylesheet" href="../assets/css/ruang.css">
 
     <!-- CSS khusus preview -->
     <style>
-        /* Container preview */
-        .preview-box {
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 25px 30px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            font-family: Arial, sans-serif;
-            color: #333;
+        body {
+            background: #f1f3f6;
         }
 
-        /* Header & tombol kembali */
-        .preview-box h2 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-size: 24px;
-            color: #007bff;
-            text-align: center;
+        .preview-box {
+            max-width: 680px;
+            margin: 40px auto;
+            padding: 30px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.08);
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .preview-header h2 {
+            margin: 0;
+            font-size: 22px;
+            color: #0d6efd;
         }
 
         .btn-back {
-            display: inline-block;
-            margin-bottom: 20px;
-            padding: 6px 14px;
+            padding: 7px 16px;
             background: #6c757d;
             color: #fff;
-            border-radius: 6px;
+            border-radius: 8px;
             text-decoration: none;
+            font-size: 14px;
             transition: 0.2s;
         }
 
@@ -67,39 +77,56 @@ $ruangData = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM ruang WHERE i
             background: #5a6268;
         }
 
-        /* Detail item */
-        .preview-box p {
-            margin: 8px 0;
-            font-size: 16px;
-            line-height: 1.5;
+        .detail-list {
+            display: grid;
+            grid-template-columns: 150px auto;
+            column-gap: 16px;
+            row-gap: 14px;
+            font-size: 15px;
         }
 
-        .preview-box p strong {
-            width: 120px;
-            display: inline-block;
+        .detail-list .label {
+            font-weight: 600;
+            color: #555;
         }
 
-        /* Gambar inventaris */
-        .preview-box img {
-            display: block;
+        .detail-list .value {
+            color: #222;
+        }
+        .detail-list .label {
+    font-weight: 600;
+    color: #555;
+    position: relative;
+}
+
+.detail-list .label::after {
+    content: " :";
+}
+
+        .image-box {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .image-box img {
             max-width: 100%;
-            height: auto;
-            margin-top: 15px;
-            border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
+        .image-box p {
+            font-size: 14px;
+            color: #999;
+        }
+
+        @media (max-width: 600px) {
             .preview-box {
                 margin: 20px 15px;
-                padding: 20px;
+                padding: 22px;
             }
-            .preview-box p strong {
-                width: 100px;
-            }
-            .preview-box h2 {
-                font-size: 20px;
+
+            .detail-list {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -107,21 +134,43 @@ $ruangData = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM ruang WHERE i
 <body>
 
 <div class="preview-box">
-    <a href="index.php?ruang_id=<?= $data['ruang_id'] ?>" class="btn-back">← Kembali</a>
-    <h2>Detail Inventaris</h2>
 
-    <p><strong>Kode:</strong> <?= htmlspecialchars($data['kode']) ?></p>
-    <p><strong>Nama Barang:</strong> <?= htmlspecialchars($data['nama']) ?></p>
-    <p><strong>Tahun:</strong> <?= htmlspecialchars($data['tahun'] ?? '-') ?></p>
-    <p><strong>Rak:</strong> <?= htmlspecialchars($data['rak']) ?></p>
-    <p><strong>Baris:</strong> <?= htmlspecialchars($data['baris']) ?></p>
-    <p><strong>Box:</strong> <?= htmlspecialchars($data['box']) ?></p>
-    <p><strong>Gambar:</strong></p>
-    <?php if(!empty($data['image']) && file_exists('../uploads/'.$data['image'])): ?>
-        <img src="../uploads/<?= htmlspecialchars($data['image']) ?>" alt="<?= htmlspecialchars($data['nama']) ?>">
-    <?php else: ?>
-        <p>-</p>
-    <?php endif; ?>
+    <div class="preview-header">
+        <h2>Detail Arsip</h2>
+        <a href="index.php?ruang_id=<?= intval($data['ruang_id']) ?>" class="btn-back">← Kembali</a>
+    </div>
+
+    <div class="detail-list">
+        <div class="label">Kode Klasifikasi</div>
+        <div class="value"><?= htmlspecialchars($data['kode'] ?? '-') ?></div>
+
+        <div class="label">Nama Arsip</div>
+        <div class="value"><?= htmlspecialchars($data['nama'] ?? '-') ?></div>
+
+        <div class="label">Tahun</div>
+        <div class="value"><?= htmlspecialchars($data['tahun'] ?? '-') ?></div>
+
+        <div class="label">Rak</div>
+        <div class="value"><?= htmlspecialchars($data['rak'] ?? '-') ?></div>
+
+        <div class="label">Box</div>
+        <div class="value"><?= htmlspecialchars($data['box'] ?? '-') ?></div>
+
+        <div class="label">No. Berkas</div>
+        <div class="value"><?= htmlspecialchars($data['baris'] ?? '-') ?></div>
+
+        <div class="label">Gambar</div>
+        <div class="value"><?= htmlspecialchars($data['image'] ?? 'Tidak ada gambar') ?></div>
+    </div>
+
+    <div class="image-box">
+        <?php if (!empty($data['image']) && file_exists("../uploads/" . $data['image'])): ?>
+            <img src="../uploads/<?= htmlspecialchars($data['image']) ?>" alt="Gambar Inventaris">
+        <?php else: ?>
+            <p>Tidak ada gambar</p>
+        <?php endif; ?>
+    </div>
+
 </div>
 
 </body>
