@@ -27,7 +27,7 @@ $qRuang = mysqli_query($conn, "SELECT * FROM ruang ORDER BY nama_ruang ASC");
 </div>
 
 <div class="container">
-<h2 style="margin-top:40px;">Pencarian Arsiarchivep Inactive</h2>
+<h2 style="margin-top:40px;">Pencarian Arsip Inactive</h2>
     <div class="form-box">
         <form method="get" action="inventaris/index.php" style="display:flex; gap:10px; flex-wrap: wrap;">
             <input type="text" name="nama" placeholder="Nama Arsip" style="padding:8px 12px;border-radius:6px;border:1px solid #ccc;flex:1;">
@@ -69,7 +69,7 @@ $qRuang = mysqli_query($conn, "SELECT * FROM ruang ORDER BY nama_ruang ASC");
 </div>
 
 <div class="footer">
-    © <?= date('Y') ?> Sistem Inventaris Arsip Inactive
+    © <?= date('Y') ?> Sistem Data Arsip Inactive
 </div>
 
 </body>
