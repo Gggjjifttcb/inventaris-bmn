@@ -21,7 +21,7 @@ $qRuang = mysqli_query($conn, "SELECT * FROM ruang ORDER BY nama_ruang ASC");
 <div class="navbar">
     <h1>Data archive Inactive</h1>
     <div>
-        <a href="tambah.php" class="btn btn-ruang">+ Tambah Data</a>
+        <a href="inventaris/tambah.php" class="btn btn-ruang">+ Tambah Data</a>
         <a href="ruang/index.php" class="btn btn-ruang">Tahun</a>
         <a href="auth/logout.php" class="btn btn-logout">Logout</a>
     </div>
