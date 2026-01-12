@@ -44,7 +44,7 @@ $data = mysqli_query($conn, $query);
         <a href="../dashboard.php" class="btn-back">← Dashboard</a>
         <h2>Data Arsip Inactive <?= $ruangData['nama_ruang'] ?? '' ?></h2>
     </div>
-    <a href="tambah.php?ruang_id=<?= $ruang_id ?>" class="btn">+ Tambah Data</a>
+    
 </div>
 
 <div class="table-wrapper">
