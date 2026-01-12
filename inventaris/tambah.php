@@ -87,11 +87,11 @@ if (isset($_POST['submit'])) {
         <label>Rak</label>
         <input type="text" name="rak" required>
 
-        <label>Baris</label>
-        <input type="text" name="baris" required>
-
         <label>Box</label>
         <input type="text" name="box" required>
+
+        <label>Baris</label>
+        <input type="text" name="baris" required>
 
         <label>Gambar (jpg/png/gif)</label>
         <input type="file" name="image" accept="image/*">
