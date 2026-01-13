@@ -23,7 +23,7 @@ if (isset($_POST['update'])) {
 <html>
 <head>
     <title>Edit </title>
-    <link rel="stylesheet" href="../assets/css/ruang.css">
+    <link rel="stylesheet" href="../assets/css/form.css">
 </head>
 <body>
 

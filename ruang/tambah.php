@@ -13,24 +13,31 @@ if (isset($_POST['simpan'])) {
 <html>
 <head>
     <title>Tambah</title>
-    <link rel="stylesheet" href="../assets/css/ruang.css">
+    <link rel="stylesheet" href="../assets/css/form.css">
 </head>
 <body>
 
-<div class="header">
-    <a href="index.php" class="btn-back">← Data Tahun</a>
-    <h2>Tambah </h2>
+<div class="form-wrapper">
+    <div class="header">
+        <a href="index.php" class="btn-back">← Data Tahun</a>
+        <h2>Tambah Tahun</h2>
+    </div>
+
+    <form method="post" class="form-box">
+        <div>
+            <label>Tahun</label>
+            <input type="text" name="nama_ruang" required>
+        </div>
+
+        <div>
+            <label>Keterangan</label>
+            <input type="text" name="keterangan">
+        </div>
+
+        <button name="simpan" class="btn">Simpan</button>
+    </form>
 </div>
 
-<form method="post" class="form-box">
-    <label>Tahun</label>
-    <input type="text" name="nama_ruang" required>
-
-    <label>Keterangan</label>
-    <textarea name="keterangan"></textarea>
-
-    <button name="simpan" class="btn">Simpan</button>
-</form>
-
 </body>
+
 </html>

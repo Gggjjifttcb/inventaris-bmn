@@ -1,77 +1,90 @@
+/* ===== RESET ===== */
 * {
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, sans-serif;
+    font-family: "Segoe UI", Arial, sans-serif;
 }
 
 body {
-    background: #f4f6f9;
+    margin: 0;
     min-height: 100vh;
+    background: #f4f6f9;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
 }
 
-.form-container {
-    background: #fff;
+/* ===== FORM CARD ===== */
+.form-wrapper {
     width: 420px;
-    padding: 30px;
-    border-radius: 14px;
-    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+    background: #fff;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 8px 25px rgba(0,0,0,.08);
 }
 
-.form-header {
+/* ===== HEADER ===== */
+.header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 20px;
 }
 
-.form-header h2 {
-    font-size: 20px;
-    color: #1f2937;
+.header h2 {
+    font-size: 18px;
+    margin: 0;
 }
 
 .btn-back {
+    font-size: 14px;
     text-decoration: none;
     color: #2563eb;
-    font-size: 14px;
-    font-weight: 600;
 }
 
-label {
-    font-size: 14px;
-    font-weight: 600;
-    color: #374151;
+/* ===== FORM ===== */
+.form-box {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
 
-input {
+.form-box label {
+    font-size: 14px;
+    color: #333;
+}
+
+.form-box input,
+.form-box textarea {
     width: 100%;
-    padding: 10px 14px;
-    margin: 6px 0 14px;
-    border-radius: 8px;
-    border: 1px solid #d1d5db;
-    transition: 0.2s;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 14px;
+    border: 1px solid #ccc;
 }
 
-input:focus {
+.form-box textarea {
+    height: 90px;
+    resize: none;
+}
+
+.form-box input:focus,
+.form-box textarea:focus {
     outline: none;
     border-color: #2563eb;
-    box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
 }
 
-button {
-    width: 100%;
-    padding: 12px;
+/* ===== BUTTON ===== */
+.btn {
+    margin-top: 10px;
+    padding: 11px;
     background: #2563eb;
-    border: none;
-    border-radius: 8px;
     color: #fff;
-    font-size: 15px;
-    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
     cursor: pointer;
-    transition: 0.2s;
 }
 
-button:hover {
-    background: #1e40af;
+.btn:hover {
+    background: #1d4ed8;
 }
