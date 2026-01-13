@@ -217,10 +217,10 @@ table tr:hover {
 
 /* Tombol Data Ruang */
 .btn-ruang {
-    background-color: #c3d2cf;
+    background-color: #08cfa7;
 }
 .btn-ruang:hover {
-    background-color: #f1faf8;
+    background-color: #08e1b2;
 }
 .btn-tambah {
     background-color: #14ab41;
