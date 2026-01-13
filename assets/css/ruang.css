@@ -1,6 +1,4 @@
-/* =========================
-   RESET & BASE
-========================= */
+/* ================= RESET & BASE ================= */
 * {
     margin: 0;
     padding: 0;
@@ -11,85 +9,122 @@
 body {
     background: #f4f6f9;
     color: #333;
-    padding: 20px;
 }
 
-/* =========================
-   HEADER
-========================= */
-.header {
+/* ================= NAVBAR ================= */
+.navbar {
+    background: #2563eb;
+    color: #fff;
+    padding: 15px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
 }
 
-.header-left {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.header h2 {
+.navbar h1 {
     font-size: 20px;
     font-weight: 600;
 }
 
-.btn,
-.btn-back {
+.navbar a {
+    color: #fff;
     text-decoration: none;
-    padding: 8px 14px;
+}
+
+/* ================= CONTAINER ================= */
+.container {
+    padding: 30px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* ================= INFO BOX ================= */
+.info-box {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 14px;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 25px rgba(0,0,0,.05);
+}
+
+.info-box h2 {
+    color: #2563eb;
+    margin-bottom: 8px;
+}
+
+.info-box p {
+    color: #64748b;
+}
+
+/* ================= BUTTON (CUSTOM) ================= */
+.btn-custom {
+    display: inline-block;
+    padding: 8px 16px;
     border-radius: 8px;
     font-size: 14px;
+    font-weight: 600;
     color: #fff;
-    background: #2563eb;
+    text-decoration: none;
     transition: 0.2s;
-    display: inline-block;
 }
 
-.btn:hover {
-    background: #1d4ed8;
-}
+/* Variasi tombol */
+.btn-ruang { background: #2563eb; }
+.btn-ruang:hover { background: #1d4ed8; }
 
-.btn-back {
-    background: #6b7280;
-}
+.btn-tambah { background: #16a34a; }
+.btn-tambah:hover { background: #15803d; }
 
-.btn-back:hover {
-    background: #4b5563;
-}
+.btn-logout { background: #ef4444; }
+.btn-logout:hover { background: #dc2626; }
 
-/* =========================
-   TABLE WRAPPER
-========================= */
-.table-wrapper {
+/* ================= FORM ================= */
+.form-box {
     background: #fff;
+    padding: 25px;
     border-radius: 14px;
-    padding: 18px;
+    max-width: 520px;
     box-shadow: 0 10px 25px rgba(0,0,0,.05);
-    overflow-x: auto;
 }
 
-/* =========================
-   FORM FILTER
-========================= */
+.form-box label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.form-box input,
+.form-box textarea,
 form input,
 form select {
+    width: 100%;
     padding: 8px 12px;
+    margin-top: 6px;
     border-radius: 8px;
     border: 1px solid #d1d5db;
     font-size: 14px;
 }
 
+.form-box input:focus,
+.form-box textarea:focus,
 form input:focus,
 form select:focus {
     outline: none;
     border-color: #2563eb;
 }
 
-/* =========================
-   TABLE
-========================= */
+/* ================= TABLE WRAPPER ================= */
+.table-wrapper {
+    background: #fff;
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 10px 25px rgba(0,0,0,.05);
+    overflow-x: auto;
+    margin-top: 25px;
+}
+
+/* ================= TABLE ================= */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -102,7 +137,7 @@ thead {
 }
 
 th {
-    text-align: justify;
+    text-align: left;
     padding: 12px;
     font-size: 12px;
     font-weight: 600;
@@ -116,41 +151,30 @@ td {
     border-bottom: 1px solid #e5e7eb;
 }
 
-/* Hover row */
 tbody tr:hover {
     background: #f8fafc;
 }
 
-/* =========================
-   NAMA ARSIP PANJANG
-========================= */
+/* ================= NAMA ARSIP PANJANG ================= */
 .td-nama {
-    word-wrap: break-word;
     word-break: break-word;
     white-space: normal;
     line-height: 1.4;
 }
 
-/* =========================
-   IMAGE
-========================= */
+/* ================= IMAGE ================= */
 td img {
     border-radius: 6px;
     border: 1px solid #e5e7eb;
 }
 
-/* =========================
-   AKSI VERTIKAL
-========================= */
+/* ================= AKSI ================= */
 .action {
     display: flex;
     flex-direction: column;
     gap: 6px;
 }
 
-/* =========================
-   BUTTON AKSI
-========================= */
 .aksi-btn {
     text-align: center;
     padding: 6px 10px;
@@ -161,47 +185,28 @@ td img {
     transition: 0.2s;
 }
 
-.aksi-btn.preview {
-    background: #0ea5e9;
-}
+.aksi-btn.preview { background: #0ea5e9; }
+.aksi-btn.preview:hover { background: #0284c7; }
 
-.aksi-btn.preview:hover {
-    background: #0284c7;
-}
+.aksi-btn.edit { background: #f59e0b; }
+.aksi-btn.edit:hover { background: #d97706; }
 
-.aksi-btn.edit {
-    background: #f59e0b;
-}
+.aksi-btn.hapus { background: #ef4444; }
+.aksi-btn.hapus:hover { background: #dc2626; }
 
-.aksi-btn.edit:hover {
-    background: #d97706;
-}
-
-.aksi-btn.hapus {
-    background: #ef4444;
-}
-
-.aksi-btn.hapus:hover {
-    background: #dc2626;
-}
-
-/* =========================
-   EMPTY DATA
-========================= */
+/* ================= EMPTY DATA ================= */
 td[colspan] {
     padding: 20px;
     color: #6b7280;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+/* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
     th, td {
         font-size: 13px;
     }
 
-    .header {
+    .navbar {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;

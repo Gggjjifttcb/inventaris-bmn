@@ -90,7 +90,7 @@ if (isset($_POST['submit'])) {
         <label>Box</label>
         <input type="text" name="box" required>
 
-        <label>Baris</label>
+        <label>No. Berkas</label>
         <input type="text" name="baris" required>
 
         <label>Gambar (jpg/png/gif)</label>
