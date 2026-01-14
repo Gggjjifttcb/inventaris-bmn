@@ -35,7 +35,7 @@ $data = mysqli_query($conn, $query);
 <head>
     <meta charset="UTF-8">
     <title>Inventaris <?= $ruangData['nama_ruang'] ?? '' ?></title>
-    <link rel="stylesheet" href="../assets/css/ruang.css">
+    <link rel="stylesheet" href="../assets/css/inventaris.css">
 </head>
 <body>
 

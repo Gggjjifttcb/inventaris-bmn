@@ -50,7 +50,7 @@ if(isset($_POST['update'])){
 <head>
     <meta charset="UTF-8">
     <title>Edit Inventaris Ruang <?= $ruangData['nama_ruang'] ?? '' ?></title>
-    <link rel="stylesheet" href="../assets/css/form.css">
+    <link rel="stylesheet" href="../assets/css/inventaris.css">
 </head>
 <body>
 <div class="form-container">

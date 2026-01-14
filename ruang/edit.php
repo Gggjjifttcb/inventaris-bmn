@@ -22,25 +22,31 @@ if (isset($_POST['update'])) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Edit </title>
+    <title>Edit Tahun</title>
     <link rel="stylesheet" href="../assets/css/form.css">
 </head>
 <body>
 
-<div class="header">
-    <a href="index.php" class="btn-back">← Data Tahun</a>
-    <h2>Edit </h2>
+<div class="form-wrapper">
+    <div class="header">
+        <a href="index.php" class="btn-back">← Data Tahun</a>
+        <h2>Edit Tahun</h2>
+    </div>
+
+    <form method="post" class="form-box">
+        <div>
+            <label>Tahun</label>
+            <input type="text" name="nama_ruang" value="<?= $data['nama_ruang'] ?>" required>
+        </div>
+
+        <div>
+            <label>Keterangan</label>
+            <textarea name="keterangan"><?= $data['keterangan'] ?></textarea>
+        </div>
+
+        <button name="update" class="btn">Update</button>
+    </form>
 </div>
-
-<form method="post" class="form-box">
-    <label>Tahun</label>
-    <input type="text" name="nama_ruang" value="<?= $data['nama_ruang'] ?>" required>
-
-    <label>Keterangan</label>
-    <textarea name="keterangan"><?= $data['keterangan'] ?></textarea>
-
-    <button name="update" class="btn">Update</button>
-</form>
 
 </body>
 </html>

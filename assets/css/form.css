@@ -1,90 +1,163 @@
-/* ===== RESET ===== */
+/* =========================
+   RESET & BASE
+========================= */
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
-    font-family: "Segoe UI", Arial, sans-serif;
+    font-family: "Inter", "Segoe UI", sans-serif;
 }
 
 body {
-    margin: 0;
     min-height: 100vh;
-    background: #f4f6f9;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    padding: 20px;
 }
 
-/* ===== FORM CARD ===== */
+/* =========================
+   FORM WRAPPER
+========================= */
 .form-wrapper {
-    width: 420px;
-    background: #fff;
-    border-radius: 10px;
-    padding: 25px;
-    box-shadow: 0 8px 25px rgba(0,0,0,.08);
+    background: #ffffff;
+    width: 100%;
+    max-width: 480px;
+    border-radius: 14px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    padding: 30px;
+    animation: fadeIn 0.5s ease-in-out;
 }
 
-/* ===== HEADER ===== */
+/* =========================
+   HEADER
+========================= */
 .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .header h2 {
-    font-size: 18px;
-    margin: 0;
+    font-size: 22px;
+    font-weight: 600;
+    color: #1f2937;
 }
 
 .btn-back {
-    font-size: 14px;
     text-decoration: none;
-    color: #2563eb;
+    font-size: 14px;
+    color: #4f46e5;
+    font-weight: 500;
+    transition: 0.3s;
 }
 
-/* ===== FORM ===== */
+.btn-back:hover {
+    color: #312e81;
+}
+
+/* =========================
+   FORM BOX
+========================= */
 .form-box {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 18px;
 }
 
 .form-box label {
     font-size: 14px;
-    color: #333;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 6px;
+    display: block;
 }
 
-.form-box input,
-.form-box textarea {
+.form-box input {
     width: 100%;
-    padding: 10px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
     font-size: 14px;
-    border-radius: 14px;
-    border: 1px solid #ccc;
+    transition: 0.3s;
 }
 
-.form-box textarea {
-    height: 90px;
-    resize: none;
-}
-
-.form-box input:focus,
-.form-box textarea:focus {
+.form-box input:focus {
     outline: none;
-    border-color: #2563eb;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 }
 
-/* ===== BUTTON ===== */
+/* =========================
+   BUTTON
+========================= */
 .btn {
     margin-top: 10px;
-    padding: 11px;
-    background: #2563eb;
-    color: #fff;
+    padding: 12px;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
     border: none;
-    border-radius: 6px;
-    font-size: 14px;
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
     cursor: pointer;
+    transition: 0.3s;
 }
 
 .btn:hover {
-    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
+}
+
+/* =========================
+   ANIMATION
+========================= */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 480px) {
+    .form-wrapper {
+        padding: 20px;
+    }
+
+    .header h2 {
+        font-size: 18px;
+    }
+}
+/* =========================
+   TEXTAREA
+========================= */
+.form-box textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    resize: vertical;
+    transition: 0.3s;
+}
+
+.form-box textarea:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 }

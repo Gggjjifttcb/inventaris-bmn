@@ -52,7 +52,7 @@ if (isset($_POST['submit'])) {
 <head>
     <meta charset="UTF-8">
     <title>Tambah Inventaris</title>
-    <link rel="stylesheet" href="../assets/css/form.css">
+    <link rel="stylesheet" href="../assets/css/inventaris.css">
 </head>
 <body>
 

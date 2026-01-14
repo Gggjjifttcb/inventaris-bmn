@@ -7,7 +7,7 @@ $data = mysqli_query($conn, "SELECT * FROM ruang ORDER BY id DESC");
 <head>
     <meta charset="UTF-8">
     <title>Data Tahun</title>
-    <link rel="stylesheet" href="../assets/css/ruang.css">
+    <link rel="stylesheet" href="../assets/css/tahun.css">
 </head>
 <body>
 
