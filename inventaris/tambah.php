@@ -7,21 +7,24 @@ if (!isset($_SESSION['login'])) {
     exit;
 }
 
-/* ambil daftar ruang */
-$ruangList = mysqli_query($conn, "SELECT * FROM ruang ORDER BY nama_ruang ASC");
+/* ===============================
+   KUNCI RUANG ID (WAJIB 10)
+================================ */
+$ruang_id = 10;
 
-$ruang_id = 0;
+/* ambil info ruang (opsional, buat judul) */
+$ruangData = mysqli_fetch_assoc(
+    mysqli_query($conn, "SELECT * FROM ruang WHERE id = $ruang_id")
+);
 
 if (isset($_POST['submit'])) {
 
-    $ruang_id = intval($_POST['ruang_id']);
     $kode  = mysqli_real_escape_string($conn, $_POST['kode']);
-    $tahun = empty($_POST['tahun']) ? NULL : (int)$_POST['tahun'];
+    $tahun = (int) $_POST['tahun'];
     $nama  = mysqli_real_escape_string($conn, $_POST['nama']);
     $rak   = mysqli_real_escape_string($conn, $_POST['rak']);
     $box   = mysqli_real_escape_string($conn, $_POST['box']);
     $baris = mysqli_real_escape_string($conn, $_POST['baris']);
-    
 
     /* upload gambar */
     $image = NULL;
@@ -35,15 +38,17 @@ if (isset($_POST['submit'])) {
         }
     }
 
-    /* insert data */
-    $sql = "INSERT INTO inventaris 
-            (kode, tahun, nama, rak,box, baris,ruang_id, image) 
-            VALUES 
-            ('$kode', $tahun, '$nama', '$rak', '$box','$baris','$ruang_id', ".($image ? "'$image'" : "NULL").")";
+    /* INSERT — RUANG ID DIKUNCI KE 10 */
+    $sql = "INSERT INTO inventaris
+            (kode, tahun, nama, rak, box, baris, ruang_id, image)
+            VALUES
+            ('$kode', '$tahun', '$nama', '$rak', '$box', '$baris', '$ruang_id',
+             ".($image ? "'$image'" : "NULL").")";
 
     mysqli_query($conn, $sql);
 
-    header("Location: index.php?ruang_id=$ruang_id");
+    /* kembali ke ruang 10 */
+    header("Location: index.php?ruang_id=10");
     exit;
 }
 ?>
@@ -51,30 +56,19 @@ if (isset($_POST['submit'])) {
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Tambah Inventaris</title>
+    <title>Tambah Inventaris Ruang <?= $ruangData['nama_ruang'] ?? '10' ?></title>
     <link rel="stylesheet" href="../assets/css/inventaris.css">
 </head>
 <body>
 
 <div class="form-container">
     <div class="form-header">
-        <a href="../dashboard.php" class="btn-back">← Kembali</a>
-        <h2>Tambah Inventaris</h2>
+        <a href="index.php?ruang_id=10" class="btn-back">← Kembali</a>
+        <h2>Tambah Inventaris Ruang <?= $ruangData['nama_ruang'] ?? '10' ?></h2>
     </div>
 
     <form method="post" enctype="multipart/form-data">
 
-        <label>Pilih Tahun</label>
-        <select name="ruang_id" required>
-            <option value="">-- Pilih Tahun --</option>
-            <?php while ($r = mysqli_fetch_assoc($ruangList)) : ?>
-                <option value="<?= $r['id'] ?>">
-                    <?= $r['nama_ruang'] ?>
-                </option>
-            <?php endwhile; ?>
-        </select>
-        <br>
-        <br>
         <label>Kode Klasifikasi</label>
         <input type="text" name="kode" required>
 
@@ -96,7 +90,7 @@ if (isset($_POST['submit'])) {
         <label>Gambar (jpg/png/gif)</label>
         <input type="file" name="image" accept="image/*">
 
-        <button type="submit" name="submit">Tambah Data</button>
+        <button type="submit" name="submit">Simpan Data</button>
 
     </form>
 </div>

@@ -42,7 +42,7 @@ $data = mysqli_query($conn, $query);
 <div class="header">
     <div class="header-left">
         <a href="../dashboard.php" class="btn-back">← Dashboard</a>
-        <h2>Data Arsip Inactive <?= $ruangData['nama_ruang'] ?? '' ?></h2>
+        
     </div>
     
 </div>
