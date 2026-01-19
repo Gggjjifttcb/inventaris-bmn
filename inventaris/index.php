@@ -90,6 +90,12 @@ $data = mysqli_query($conn, $query);
 
         <button type="submit" class="btn">Cari</button>
         <a href="index.php?ruang_id=10" class="btn-back">Reset</a>
+        <a href="export_excel.php?nama=<?= urlencode($nama) ?>&tahun=<?= urlencode($tahun) ?>&rak=<?= urlencode($rak) ?>&box=<?= urlencode($box) ?>"
+   class="btn"
+   style="background:#1D6F42;">
+   📊 Export Excel
+</a>
+
     </form>
 
     <!-- TABEL DATA -->

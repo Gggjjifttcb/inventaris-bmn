@@ -1,194 +1,102 @@
 <?php
-ob_start();
-error_reporting(0);
-ini_set('display_errors', 0);
-
 include "../config/koneksi.php";
 require('fpdf/fpdf.php');
 
-session_start();
-if (!isset($_SESSION['login'])) {
-    header("Location: ../auth/login.php");
-    exit;
-}
+/* =========================
+   KUNCI RUANG ARSIP INAKTIF
+========================= */
+$ruang_id = 10;
 
-/* ================= AMBIL PARAMETER ================= */
-$ruang_id = isset($_GET['ruang_id']) ? intval($_GET['ruang_id']) : 0;
-
-$nama  = isset($_GET['nama'])  ? mysqli_real_escape_string($conn, $_GET['nama'])  : '';
+/* =========================
+   AMBIL FILTER DARI URL
+========================= */
+$nama  = isset($_GET['nama']) ? mysqli_real_escape_string($conn, $_GET['nama']) : '';
 $tahun = isset($_GET['tahun']) ? mysqli_real_escape_string($conn, $_GET['tahun']) : '';
-$rak   = isset($_GET['rak'])   ? mysqli_real_escape_string($conn, $_GET['rak'])   : '';
-$box   = isset($_GET['box'])   ? mysqli_real_escape_string($conn, $_GET['box'])   : '';
+$rak   = isset($_GET['rak']) ? mysqli_real_escape_string($conn, $_GET['rak']) : '';
+$box   = isset($_GET['box']) ? mysqli_real_escape_string($conn, $_GET['box']) : '';
 
-/* ================= DATA RUANG ================= */
-$ruangData = mysqli_fetch_assoc(
-    mysqli_query($conn, "SELECT * FROM ruang WHERE id = $ruang_id")
-);
-
-/* ================= QUERY INVENTARIS ================= */
-$query = "SELECT * FROM inventaris WHERE ruang_id = $ruang_id";
+/* =========================
+   QUERY SAMA DENGAN INDEX
+========================= */
+$query = "SELECT inv.*, r.nama_ruang
+          FROM inventaris inv
+          LEFT JOIN ruang r ON inv.ruang_id = r.id
+          WHERE inv.ruang_id = 10";
 
 if ($nama != '') {
-    $query .= " AND nama LIKE '%$nama%'";
+    $query .= " AND inv.nama LIKE '%$nama%'";
 }
 if ($tahun != '') {
-    $query .= " AND tahun = '$tahun'";
+    $query .= " AND inv.tahun = '$tahun'";
 }
 if ($rak != '') {
-    $query .= " AND rak LIKE '%$rak%'";
+    $query .= " AND inv.rak LIKE '%$rak%'";
 }
 if ($box != '') {
-    $query .= " AND box LIKE '%$box%'";
+    $query .= " AND inv.box LIKE '%$box%'";
 }
 
-$query .= " ORDER BY id ASC";
+$query .= " ORDER BY inv.id DESC";
 
 $data = mysqli_query($conn, $query);
 
-/* ================= CLASS PDF ================= */
-class PDF extends FPDF
-{
-    function Header()
-    {
-        $this->Image('../assets/logo.png',10,10,25);
-        $this->Image('../assets/logo1.png',175,10,25);
-
-        $this->SetFont('Arial','B',12);
-        $this->Cell(0,7,'KEMENTERIAN PARIWISATA REPUBLIK INDONESIA',0,1,'C');
-
-        $this->SetFont('Arial','B',16);
-        $this->Cell(0,7,'POLITEKNIK PARIWISATA LOMBOK',0,1,'C');
-
-        $this->SetFont('Arial','',10);
-        $this->MultiCell(0,5,
-            "Jalan Raden Puguh No. 1, Puyung, Jonggat,\n".
-            "Praya, Lombok Tengah, NTB 83561\n".
-            "Telepon (+62-0370) 6158029",
-            0,'C'
-        );
-
-        $this->Ln(3);
-        $this->Line(10,45,200,45);
-        $this->Line(10,46,200,46);
-        $this->Ln(10);
-    }
-
-    function HeaderTable($kolom, $widths)
-    {
-        $this->SetFont('Arial','B',10);
-        foreach ($kolom as $judul => $w) {
-            $this->Cell($w, 8, $judul, 1, 0, 'C');
-        }
-        $this->Ln();
-    }
-
-    function Row($data, $widths, $aligns, $imagePath = null, $kolomHeader = null)
-    {
-        $lineHeight = 6;
-        $nb = 0;
-
-        for ($i=0; $i<count($data); $i++) {
-            $nb = max($nb, $this->NbLines($widths[$i], $data[$i]));
-        }
-
-        $rowHeight = max($lineHeight * $nb, 25);
-
-        if ($this->GetY() + $rowHeight > $this->PageBreakTrigger) {
-            $this->AddPage();
-            $this->HeaderTable($kolomHeader, $widths);
-        }
-
-        $this->SetFont('Arial','',10);
-
-        for ($i=0; $i<count($data); $i++) {
-            $x = $this->GetX();
-            $y = $this->GetY();
-            $w = $widths[$i];
-
-            $this->Rect($x, $y, $w, $rowHeight);
-
-            if ($i == count($data)-1 && $imagePath && file_exists($imagePath)) {
-                $this->Image($imagePath, $x+2, $y+2, $w-4, $rowHeight-4);
-            } else {
-                $this->MultiCell($w, $lineHeight, $data[$i], 0, $aligns[$i]);
-            }
-
-            $this->SetXY($x+$w, $y);
-        }
-
-        $this->Ln($rowHeight);
-    }
-
-    function NbLines($w, $txt)
-    {
-        $cw = &$this->CurrentFont['cw'];
-        $wmax = ($w - 2*$this->cMargin) * 1000 / $this->FontSize;
-        $s = str_replace("\r",'',$txt);
-        $nb = strlen($s);
-        $sep = -1; $i = 0; $j = 0; $l = 0; $nl = 1;
-
-        while ($i < $nb) {
-            $c = $s[$i];
-            if ($c == "\n") {
-                $i++; $sep = -1; $j = $i; $l = 0; $nl++;
-                continue;
-            }
-            if ($c == ' ') $sep = $i;
-            $l += $cw[$c];
-            if ($l > $wmax) {
-                $i = ($sep == -1) ? $i+1 : $sep+1;
-                $sep = -1; $j = $i; $l = 0; $nl++;
-            } else {
-                $i++;
-            }
-        }
-        return $nl;
-    }
-}
-
-/* ================= CETAK PDF ================= */
-$pdf = new PDF();
+/* =========================
+   PDF SETUP
+========================= */
+$pdf = new FPDF('L','mm','A4');
 $pdf->AddPage();
-
 $pdf->SetFont('Arial','B',14);
-$pdf->Cell(0,10,'Inventaris Ruang '.$ruangData['nama_ruang'],0,1,'C');
-$pdf->Ln(5);
+$pdf->Cell(0,10,'LAPORAN ARSIP INAKTIF',0,1,'C');
 
-$kolom = [
-    'No' => 10,
-    'Kode' => 25,
-    'Tahun' => 15,
-    'Nama Arsip' => 45,
-    'Rak' => 15,
-    'Box' => 15,
-    'No. Berkas' => 25,
-    'Gambar' => 40
-];
+$pdf->Ln(3);
+$pdf->SetFont('Arial','',10);
 
-$widths = array_values($kolom);
-$aligns = ['C','C','C','L','C','C','C','C'];
+/* INFO FILTER */
+$filterText = [];
+if ($nama)  $filterText[] = "Nama: $nama";
+if ($tahun) $filterText[] = "Tahun: $tahun";
+if ($rak)   $filterText[] = "Rak: $rak";
+if ($box)   $filterText[] = "Box: $box";
 
-$pdf->HeaderTable($kolom, $widths);
+$pdf->Cell(0,7,'Filter: '.(count($filterText) ? implode(', ', $filterText) : 'Semua Data'),0,1);
 
+$pdf->Ln(3);
+
+/* =========================
+   HEADER TABEL
+========================= */
+$pdf->SetFont('Arial','B',9);
+$pdf->Cell(10,8,'No',1);
+$pdf->Cell(35,8,'Kode',1);
+$pdf->Cell(20,8,'Tahun',1);
+$pdf->Cell(80,8,'Nama Arsip',1);
+$pdf->Cell(20,8,'Rak',1);
+$pdf->Cell(20,8,'Box',1);
+$pdf->Cell(30,8,'No Berkas',1);
+$pdf->Ln();
+
+/* =========================
+   ISI DATA
+========================= */
+$pdf->SetFont('Arial','',9);
 $no = 1;
-while ($row = mysqli_fetch_assoc($data)) {
 
-    $imagePath = (!empty($row['image']) && file_exists('../uploads/'.$row['image']))
-        ? '../uploads/'.$row['image']
-        : null;
-
-    $pdf->Row([
-        $no++,
-        $row['kode'],
-        $row['tahun'],
-        $row['nama'],
-        $row['rak'],
-        $row['box'],
-        $row['baris'],
-        ''
-    ], $widths, $aligns, $imagePath, $kolom);
+if (mysqli_num_rows($data) > 0) {
+    while ($row = mysqli_fetch_assoc($data)) {
+        $pdf->Cell(10,8,$no++,1);
+        $pdf->Cell(35,8,$row['kode'],1);
+        $pdf->Cell(20,8,$row['tahun'],1);
+        $pdf->Cell(80,8,$row['nama'],1);
+        $pdf->Cell(20,8,$row['rak'],1);
+        $pdf->Cell(20,8,$row['box'],1);
+        $pdf->Cell(30,8,$row['baris'],1);
+        $pdf->Ln();
+    }
+} else {
+    $pdf->Cell(215,8,'Data tidak ditemukan',1,1,'C');
 }
 
-ob_end_clean();
-$pdf->Output('D','Inventaris_'.$ruangData['nama_ruang'].'.pdf');
-exit;
+/* =========================
+   OUTPUT
+========================= */
+$pdf->Output('I','arsip_inaktif.pdf');
