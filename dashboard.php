@@ -40,17 +40,6 @@ if (!isset($_SESSION['login'])) {
                    placeholder="Nama Arsip"
                    style="padding:8px 12px;border-radius:6px;border:1px solid #ccc;flex:1;">
 
-            <select name="tahun"
-                    style="padding:8px 12px;border-radius:6px;border:1px solid #ccc;">
-                <option value="">-- Pilih Tahun --</option>
-                <?php
-                $qTahun = mysqli_query($conn, "SELECT DISTINCT tahun FROM inventaris WHERE ruang_id=10 ORDER BY tahun ASC");
-                while ($t = mysqli_fetch_assoc($qTahun)) {
-                    echo '<option value="'.$t['tahun'].'">'.$t['tahun'].'</option>';
-                }
-                ?>
-            </select>
-
             <input type="text"
                    name="rak"
                    placeholder="Rak"
@@ -60,6 +49,16 @@ if (!isset($_SESSION['login'])) {
                    name="box"
                    placeholder="Box"
                    style="padding:8px 12px;border-radius:6px;border:1px solid #ccc;width:80px;">
+             <select name="tahun"
+                    style="padding:8px 12px;border-radius:6px;border:1px solid #ccc;">
+                <option value="">-- Pilih Tahun --</option>
+                <?php
+                $qTahun = mysqli_query($conn, "SELECT DISTINCT tahun FROM inventaris WHERE ruang_id=10 ORDER BY tahun ASC");
+                while ($t = mysqli_fetch_assoc($qTahun)) {
+                    echo '<option value="'.$t['tahun'].'">'.$t['tahun'].'</option>';
+                }
+                ?>
+            </select>
 
             <button type="submit" class="btn">Cari</button>
         </form>

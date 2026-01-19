@@ -77,16 +77,16 @@ $data = mysqli_query($conn, $query);
         <input type="text" name="box" placeholder="Box"
                value="<?= htmlspecialchars($box) ?>" style="width:80px">
 
-        <select name="tahun" style="padding:8px 12px;border-radius:6px;border:1px solid #ccc;">
-            <option value="">-- Pilih Tahun --</option>
-            <?php
-            $qTahun = mysqli_query($conn, "SELECT DISTINCT tahun FROM inventaris ORDER BY tahun ASC");
-            while ($t = mysqli_fetch_assoc($qTahun)) {
-                $selected = ($tahun == $t['tahun']) ? 'selected' : '';
-                echo "<option value='{$t['tahun']}' $selected>{$t['tahun']}</option>";
-            }
-            ?>
-        </select>
+        <select name="tahun"
+                    style="padding:8px 12px;border-radius:6px;border:1px solid #ccc;">
+                <option value="">-- Pilih Tahun --</option>
+                <?php
+                $qTahun = mysqli_query($conn, "SELECT DISTINCT tahun FROM inventaris WHERE ruang_id=10 ORDER BY tahun ASC");
+                while ($t = mysqli_fetch_assoc($qTahun)) {
+                    echo '<option value="'.$t['tahun'].'">'.$t['tahun'].'</option>';
+                }
+                ?>
+            </select>
 
         <button type="submit" class="btn">Cari</button>
         <a href="index.php?ruang_id=10" class="btn-back">Reset</a>
