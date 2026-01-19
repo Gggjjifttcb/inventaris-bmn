@@ -1,30 +1,46 @@
 <?php
 include "../config/koneksi.php";
 
-$ruang_id = isset($_GET['ruang_id']) ? intval($_GET['ruang_id']) : 0;
+/* =========================
+   KUNCI RUANG ARSIP INAKTIF
+========================= */
+$ruang_id = 10;
 
-// Ambil data ruang
+/* =========================
+   AMBIL DATA RUANG
+========================= */
 $ruangData = mysqli_fetch_assoc(
     mysqli_query($conn, "SELECT * FROM ruang WHERE id = $ruang_id")
 );
 
-// Ambil filter
+/* =========================
+   AMBIL FILTER
+========================= */
 $nama  = isset($_GET['nama']) ? mysqli_real_escape_string($conn, $_GET['nama']) : '';
 $tahun = isset($_GET['tahun']) ? mysqli_real_escape_string($conn, $_GET['tahun']) : '';
 $rak   = isset($_GET['rak']) ? mysqli_real_escape_string($conn, $_GET['rak']) : '';
 $box   = isset($_GET['box']) ? mysqli_real_escape_string($conn, $_GET['box']) : '';
 
-// Query inventaris
+/* =========================
+   QUERY INVENTARIS
+========================= */
 $query = "SELECT inv.*, r.nama_ruang 
           FROM inventaris inv
           LEFT JOIN ruang r ON inv.ruang_id = r.id
-          WHERE 1=1";
+          WHERE inv.ruang_id = 10";
 
-if ($ruang_id) $query .= " AND inv.ruang_id = $ruang_id";
-if ($nama != '')  $query .= " AND inv.nama LIKE '%$nama%'";
-if ($tahun != '') $query .= " AND inv.tahun = '$tahun'";
-if ($rak != '')   $query .= " AND inv.rak LIKE '%$rak%'";
-if ($box != '')   $query .= " AND inv.box LIKE '%$box%'";
+if ($nama != '') {
+    $query .= " AND inv.nama LIKE '%$nama%'";
+}
+if ($tahun != '') {
+    $query .= " AND inv.tahun = '$tahun'";
+}
+if ($rak != '') {
+    $query .= " AND inv.rak LIKE '%$rak%'";
+}
+if ($box != '') {
+    $query .= " AND inv.box LIKE '%$box%'";
+}
 
 $query .= " ORDER BY inv.id DESC";
 
@@ -34,7 +50,7 @@ $data = mysqli_query($conn, $query);
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Inventaris <?= $ruangData['nama_ruang'] ?? '' ?></title>
+    <title>Inventaris <?= $ruangData['nama_ruang'] ?></title>
     <link rel="stylesheet" href="../assets/css/inventaris.css">
 </head>
 <body>
@@ -42,15 +58,15 @@ $data = mysqli_query($conn, $query);
 <div class="header">
     <div class="header-left">
         <a href="../dashboard.php" class="btn-back">← Dashboard</a>
-        
     </div>
-    
+    <a href="tambah.php" class="btn btn-ruang">+ Tambah Data</a>
 </div>
 
 <div class="table-wrapper">
 
-    <form method="get" style="display:flex; gap:10px; margin-bottom:15px;">
-        <input type="hidden" name="ruang_id" value="<?= $ruang_id ?>">
+    <!-- FORM PENCARIAN -->
+    <form method="get" style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
+        <input type="hidden" name="ruang_id" value="10">
 
         <input type="text" name="nama" placeholder="Nama Arsip"
                value="<?= htmlspecialchars($nama) ?>" style="flex:1">
@@ -62,20 +78,21 @@ $data = mysqli_query($conn, $query);
                value="<?= htmlspecialchars($box) ?>" style="width:80px">
 
         <select name="tahun" style="padding:8px 12px;border-radius:6px;border:1px solid #ccc;">
-                <option value="">-- Pilih Tahun --</option>
-                <?php
-                $qTahun = mysqli_query($conn, "SELECT DISTINCT tahun FROM inventaris ORDER BY tahun ASC");
-                while($t = mysqli_fetch_assoc($qTahun)){
-                    echo '<option value="'.$t['tahun'].'">'.$t['tahun'].'</option>';
-                }
-                ?>
-            </select>
+            <option value="">-- Pilih Tahun --</option>
+            <?php
+            $qTahun = mysqli_query($conn, "SELECT DISTINCT tahun FROM inventaris ORDER BY tahun ASC");
+            while ($t = mysqli_fetch_assoc($qTahun)) {
+                $selected = ($tahun == $t['tahun']) ? 'selected' : '';
+                echo "<option value='{$t['tahun']}' $selected>{$t['tahun']}</option>";
+            }
+            ?>
+        </select>
+
         <button type="submit" class="btn">Cari</button>
-        <a href="index.php?ruang_id=<?= $ruang_id ?>" class="btn-back">Reset</a>
-
-
+        <a href="index.php?ruang_id=10" class="btn-back">Reset</a>
     </form>
 
+    <!-- TABEL DATA -->
     <table>
         <thead>
             <tr>
@@ -100,16 +117,10 @@ $data = mysqli_query($conn, $query);
                 <td><?= $no++ ?></td>
                 <td><?= htmlspecialchars($row['kode']) ?></td>
                 <td><?= htmlspecialchars($row['tahun']) ?></td>
-
-                <!-- PENTING: class td-nama -->
-                <td class="td-nama">
-                    <?= htmlspecialchars($row['nama']) ?>
-                </td>
-
+                <td class="td-nama"><?= htmlspecialchars($row['nama']) ?></td>
                 <td><?= htmlspecialchars($row['rak']) ?></td>
                 <td><?= htmlspecialchars($row['box']) ?></td>
                 <td><?= htmlspecialchars($row['baris']) ?></td>
-
                 <td>
                     <?php if (!empty($row['image']) && file_exists('../uploads/'.$row['image'])): ?>
                         <img src="../uploads/<?= $row['image'] ?>" width="50">
@@ -117,7 +128,6 @@ $data = mysqli_query($conn, $query);
                         -
                     <?php endif; ?>
                 </td>
-
                 <td class="action">
                     <a href="preview.php?id=<?= $row['id'] ?>" class="aksi-btn preview">Preview</a>
                     <a href="edit.php?id=<?= $row['id'] ?>" class="aksi-btn edit">Edit</a>
