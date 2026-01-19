@@ -3,19 +3,17 @@ include "../config/koneksi.php";
 
 $ruang_id = 10;
 
-$nama  = isset($_GET['nama']) ? mysqli_real_escape_string($conn, $_GET['nama']) : '';
-$tahun = isset($_GET['tahun']) ? mysqli_real_escape_string($conn, $_GET['tahun']) : '';
-$rak   = isset($_GET['rak']) ? mysqli_real_escape_string($conn, $_GET['rak']) : '';
-$box   = isset($_GET['box']) ? mysqli_real_escape_string($conn, $_GET['box']) : '';
+$nama  = $_GET['nama']  ?? '';
+$tahun = $_GET['tahun'] ?? '';
+$rak   = $_GET['rak']   ?? '';
+$box   = $_GET['box']   ?? '';
 
 $query = "SELECT * FROM inventaris WHERE ruang_id = 10";
 
-if ($nama !== '')  $query .= " AND nama LIKE '%$nama%'";
+if ($nama  !== '') $query .= " AND nama  LIKE '%$nama%'";
 if ($tahun !== '') $query .= " AND tahun = '$tahun'";
-if ($rak !== '')   $query .= " AND rak LIKE '%$rak%'";
-if ($box !== '')   $query .= " AND box LIKE '%$box%'";
-
-$query .= " ORDER BY id DESC";
+if ($rak   !== '') $query .= " AND rak   LIKE '%$rak%'";
+if ($box   !== '') $query .= " AND box   LIKE '%$box%'";
 
 $data = mysqli_query($conn, $query);
 
@@ -23,31 +21,48 @@ header("Content-Type: application/vnd.ms-excel");
 header("Content-Disposition: attachment; filename=arsip_inaktif.xls");
 header("Pragma: no-cache");
 header("Expires: 0");
+
+$base_url = "http://localhost/inventaris-bmn/uploads/";
 ?>
 
-<table style="border-collapse:collapse;">
-    <tr>
-        <th style="border:1px solid #000; padding:6px;">No</th>
-        <th style="border:1px solid #000; padding:6px;">Kode</th>
-        <th style="border:1px solid #000; padding:6px;">Tahun</th>
-        <th style="border:1px solid #000; padding:6px;">Nama Arsip</th>
-        <th style="border:1px solid #000; padding:6px;">Rak</th>
-        <th style="border:1px solid #000; padding:6px;">Box</th>
-        <th style="border:1px solid #000; padding:6px;">No. Berkas</th>
+<table border="1" cellspacing="0" cellpadding="5" width="100%">
+    <tr style="background:#e9ecef; font-weight:bold;">
+        <th width="40">No</th>
+        <th width="200">Kode Klasifikasi</th>
+        <th width="120">Tahun</th>
+        <th width="450">Nama Arsip</th>
+        <th width="129">Rak</th>
+        <th width="120">Box</th>
+        <th width="120">No. Berkas</th>
+        <th width="120">Gambar</th>
     </tr>
 
 <?php
 $no = 1;
 while ($row = mysqli_fetch_assoc($data)) {
-    echo "<tr>";
-    echo "<td style='border:1px solid #000; padding:6px;'>".$no++."</td>";
-    echo "<td style='border:1px solid #000; padding:6px;'>".$row['kode']."</td>";
-    echo "<td style='border:1px solid #000; padding:6px;'>".$row['tahun']."</td>";
-    echo "<td style='border:1px solid #000; padding:6px;'>".$row['nama']."</td>";
-    echo "<td style='border:1px solid #000; padding:6px;'>".$row['rak']."</td>";
-    echo "<td style='border:1px solid #000; padding:6px;'>".$row['box']."</td>";
-    echo "<td style='border:1px solid #000; padding:6px;'>".$row['baris']."</td>";
+    echo "<tr height='110'>";
+    echo "<td align='center'>{$no}</td>";
+    echo "<td>{$row['kode']}</td>";
+    echo "<td align='center'>{$row['tahun']}</td>";
+    echo "<td>{$row['nama']}</td>";
+    echo "<td align='center'>{$row['rak']}</td>";
+    echo "<td align='center'>{$row['box']}</td>";
+    echo "<td align='center'>{$row['baris']}</td>";
+
+    if (!empty($row['image']) && file_exists("../uploads/".$row['image'])) {
+        $img = $base_url.$row['image'];
+        echo "
+        <td align='center'>
+            <div style='width:120px; height:100px; overflow:hidden;'>
+                <img src='$img' width='120' height='100'>
+            </div>
+        </td>";
+    } else {
+        echo "<td align='center'>-</td>";
+    }
+
     echo "</tr>";
+    $no++;
 }
 ?>
 </table>
