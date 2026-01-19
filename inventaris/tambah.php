@@ -64,7 +64,7 @@ if (isset($_POST['submit'])) {
 <div class="form-container">
     <div class="form-header">
         <a href="index.php?ruang_id=10" class="btn-back">← Kembali</a>
-        <h2>Tambah Inventaris Ruang <?= $ruangData['nama_ruang'] ?? '10' ?></h2>
+        <h2>Tambah <?= $ruangData['nama_ruang'] ?? '10' ?></h2>
     </div>
 
     <form method="post" enctype="multipart/form-data">

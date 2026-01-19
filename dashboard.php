@@ -19,7 +19,7 @@ if (!isset($_SESSION['login'])) {
 <div class="navbar">
     <h1>Data Arsip Inaktif</h1>
     <div>
-        <a href="inventaris/tambah-ruang-10.php" class="btn btn-ruang">+ Tambah Data</a>
+        <a href="inventaris/tambah.php" class="btn btn-ruang">+ Tambah Data</a>
         <a href="inventaris/index.php?ruang_id=10" class="btn btn-ruang">Data Arsip</a>
         <a href="auth/logout.php" class="btn btn-logout">Logout</a>
     </div>
