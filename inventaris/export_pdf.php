@@ -3,14 +3,14 @@ ob_start();
 error_reporting(0);
 ini_set('display_errors', 0);
 
+include "../config/koneksi.php";
+require('fpdf/fpdf.php');
+
 session_start();
 if (!isset($_SESSION['login'])) {
     header("Location: ../auth/login.php");
     exit;
 }
-
-include "../config/koneksi.php";
-require('fpdf/fpdf.php');
 
 /* ================= AMBIL PARAMETER ================= */
 $ruang_id = isset($_GET['ruang_id']) ? intval($_GET['ruang_id']) : 0;
@@ -28,12 +28,21 @@ $ruangData = mysqli_fetch_assoc(
 /* ================= QUERY INVENTARIS ================= */
 $query = "SELECT * FROM inventaris WHERE ruang_id = $ruang_id";
 
-if ($nama != '')  $query .= " AND nama LIKE '%$nama%'";
-if ($tahun != '') $query .= " AND tahun = '$tahun'";
-if ($rak != '')   $query .= " AND rak LIKE '%$rak%'";
-if ($box != '')   $query .= " AND box LIKE '%$box%'";
+if ($nama != '') {
+    $query .= " AND nama LIKE '%$nama%'";
+}
+if ($tahun != '') {
+    $query .= " AND tahun = '$tahun'";
+}
+if ($rak != '') {
+    $query .= " AND rak LIKE '%$rak%'";
+}
+if ($box != '') {
+    $query .= " AND box LIKE '%$box%'";
+}
 
 $query .= " ORDER BY id ASC";
+
 $data = mysqli_query($conn, $query);
 
 /* ================= CLASS PDF ================= */
@@ -52,7 +61,7 @@ class PDF extends FPDF
 
         $this->SetFont('Arial','',10);
         $this->MultiCell(0,5,
-            "Jalan Raden Puguh No. 1, Puyung, Jonggat\n".
+            "Jalan Raden Puguh No. 1, Puyung, Jonggat,\n".
             "Praya, Lombok Tengah, NTB 83561\n".
             "Telepon (+62-0370) 6158029",
             0,'C'
@@ -61,10 +70,10 @@ class PDF extends FPDF
         $this->Ln(3);
         $this->Line(10,45,200,45);
         $this->Line(10,46,200,46);
-        $this->Ln(8);
+        $this->Ln(10);
     }
 
-    function HeaderTable($kolom)
+    function HeaderTable($kolom, $widths)
     {
         $this->SetFont('Arial','B',10);
         foreach ($kolom as $judul => $w) {
@@ -75,12 +84,10 @@ class PDF extends FPDF
 
     function Row($data, $widths, $aligns, $imagePath = null, $kolomHeader = null)
     {
-        $this->SetFont('Arial','',10);
-
         $lineHeight = 6;
         $nb = 0;
 
-        for ($i = 0; $i < count($data); $i++) {
+        for ($i=0; $i<count($data); $i++) {
             $nb = max($nb, $this->NbLines($widths[$i], $data[$i]));
         }
 
@@ -88,10 +95,12 @@ class PDF extends FPDF
 
         if ($this->GetY() + $rowHeight > $this->PageBreakTrigger) {
             $this->AddPage();
-            $this->HeaderTable($kolomHeader);
+            $this->HeaderTable($kolomHeader, $widths);
         }
 
-        for ($i = 0; $i < count($data); $i++) {
+        $this->SetFont('Arial','',10);
+
+        for ($i=0; $i<count($data); $i++) {
             $x = $this->GetX();
             $y = $this->GetY();
             $w = $widths[$i];
@@ -104,7 +113,7 @@ class PDF extends FPDF
                 $this->MultiCell($w, $lineHeight, $data[$i], 0, $aligns[$i]);
             }
 
-            $this->SetXY($x + $w, $y);
+            $this->SetXY($x+$w, $y);
         }
 
         $this->Ln($rowHeight);
@@ -116,19 +125,19 @@ class PDF extends FPDF
         $wmax = ($w - 2*$this->cMargin) * 1000 / $this->FontSize;
         $s = str_replace("\r",'',$txt);
         $nb = strlen($s);
-        $sep = -1; $i = 0; $l = 0; $nl = 1;
+        $sep = -1; $i = 0; $j = 0; $l = 0; $nl = 1;
 
         while ($i < $nb) {
             $c = $s[$i];
             if ($c == "\n") {
-                $i++; $sep = -1; $l = 0; $nl++;
+                $i++; $sep = -1; $j = $i; $l = 0; $nl++;
                 continue;
             }
             if ($c == ' ') $sep = $i;
             $l += $cw[$c];
             if ($l > $wmax) {
                 $i = ($sep == -1) ? $i+1 : $sep+1;
-                $sep = -1; $l = 0; $nl++;
+                $sep = -1; $j = $i; $l = 0; $nl++;
             } else {
                 $i++;
             }
@@ -139,12 +148,11 @@ class PDF extends FPDF
 
 /* ================= CETAK PDF ================= */
 $pdf = new PDF();
-$pdf->SetAutoPageBreak(true, 20);
 $pdf->AddPage();
 
 $pdf->SetFont('Arial','B',14);
-$pdf->Cell(0,10,'Inventaris Ruang '.$ruangData['nama_ruang'],0,1,'C');
-$pdf->Ln(4);
+$pdf->Cell(0,10,'Laporan'.$ruangData['nama_ruang'],0,1,'C');
+$pdf->Ln(5);
 
 $kolom = [
     'No' => 10,
@@ -160,7 +168,7 @@ $kolom = [
 $widths = array_values($kolom);
 $aligns = ['C','C','C','L','C','C','C','C'];
 
-$pdf->HeaderTable($kolom);
+$pdf->HeaderTable($kolom, $widths);
 
 $no = 1;
 while ($row = mysqli_fetch_assoc($data)) {
@@ -182,5 +190,5 @@ while ($row = mysqli_fetch_assoc($data)) {
 }
 
 ob_end_clean();
-$pdf->Output('D', 'Inventaris_'.$ruangData['nama_ruang'].'.pdf');
+$pdf->Output('D','Inventaris_'.$ruangData['nama_ruang'].'.pdf');
 exit;
