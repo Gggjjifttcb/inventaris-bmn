@@ -95,6 +95,7 @@ $data = mysqli_query($conn, $query);
    style="background:#1D6F42;">
    📊 Export Excel
 </a>
+<a href="export_pdf.php?ruang_id=<?= $ruang_id ?>&nama=<?= urlencode($nama) ?>&tahun=<?= urlencode($tahun) ?>&rak=<?= urlencode($rak) ?>&box=<?= urlencode($box) ?>"class="btn" style="background:#28a745;">📄 Export PDF</a>
 
     </form>
 
