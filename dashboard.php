@@ -13,6 +13,52 @@ if (!isset($_SESSION['login'])) {
     <meta charset="UTF-8">
     <title>Dashboard Data Arsip Inaktif</title>
     <link rel="stylesheet" href="assets/css/dashboard.css">
+    <style>
+        /* ===== INFO SECTION ===== */
+.info-section {
+    margin-top: 60px;
+    padding: 30px;
+}
+
+.info-card {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+    max-width: 1000px;
+    margin: auto;
+}
+
+.info-card img {
+    width: 120px;
+    height: auto;
+}
+
+.info-text h3 {
+    margin: 0 0 10px;
+    font-size: 20px;
+    color: #1f2937;
+}
+
+.info-text p {
+    margin: 0 0 12px;
+    color: #4b5563;
+    line-height: 1.6;
+}
+
+.badge {
+    display: inline-block;
+    padding: 6px 12px;
+    background: #e0f2fe;
+    color: #0369a1;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+}
+    </style>
 </head>
 <body>
 
@@ -63,6 +109,21 @@ if (!isset($_SESSION['login'])) {
             <button type="submit" class="btn">Cari</button>
         </form>
     </div>
+    <div class="info-section">
+    <div class="info-card">
+        <img src="assets/img/arsip nasional.png" alt="Arsip Nasional RI">
+        <div class="info-text">
+            <h3>Arsip Nasional Republik Indonesia (ANRI)</h3>
+            <p>
+                Arsip Inaktif merupakan arsip yang frekuensi penggunaannya telah menurun,
+                namun masih memiliki nilai guna administrasi, hukum, dan historis
+                sesuai ketentuan kearsipan nasional.
+            </p>
+            <span class="badge">Sesuai UU No. 43 Tahun 2009</span>
+        </div>
+    </div>
+</div>
+
 </div>
 
 </body>
