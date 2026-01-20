@@ -156,7 +156,7 @@ $pdf->Ln(5);
 
 $kolom = [
     'No' => 10,
-    'Kode' => 25,
+    'Kode Klasifikasi' => 30,
     'Tahun' => 15,
     'Nama Arsip' => 45,
     'Rak' => 15,
