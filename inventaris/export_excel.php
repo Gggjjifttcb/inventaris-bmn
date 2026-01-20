@@ -53,8 +53,8 @@ while ($row = mysqli_fetch_assoc($data)) {
         $img = $base_url.$row['image'];
         echo "
         <td>
-            <div style='width:120px; height:100px; overflow:hidden; display:flex; align-items:center; justify-content:center;'>
-                <img src='$img' width='100' height='100'>
+            <div style='width:100px; height:100px; overflow:hidden; display:flex; align-items:center; justify-content:center;'>
+                <img src='$img' width='100' height='72'>
             </div>
         </td>";
     } else {
