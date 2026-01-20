@@ -111,7 +111,7 @@ if (!isset($_SESSION['login'])) {
     </div>
     <div class="info-section">
     <div class="info-card">
-        <img src="assets/img/arsip nasional.png" alt="Arsip Nasional RI">
+        <img src="assets/img/anri.png" alt="Arsip Nasional RI">
         <div class="info-text">
             <h3>Arsip Nasional Republik Indonesia (ANRI)</h3>
             <p>
