@@ -34,7 +34,7 @@ $base_url = "http://localhost/inventaris-bmn/uploads/";
         <th width="129">Rak</th>
         <th width="120">Box</th>
         <th width="120">No. Berkas</th>
-        <th width="150">Gambar</th>
+        <th width="120">Gambar</th>
     </tr>
 
 <?php
@@ -54,7 +54,7 @@ while ($row = mysqli_fetch_assoc($data)) {
         echo "
         <td>
             <div style='width:100px; height:100px; overflow:hidden; display:flex; align-items:center; justify-content:center;'>
-                <img src='$img' width='100' height='72'>
+                <img src='$img' width='120' height='110'>
             </div>
         </td>";
     } else {
