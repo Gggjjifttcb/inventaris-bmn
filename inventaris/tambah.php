@@ -60,6 +60,9 @@ if (isset($_POST['submit'])) {
 <link rel="stylesheet" href="../assets/css/inventaris.css">
 
 <style>
+.autocomplete {
+    position: relative;
+}
 
 .dropdown {
     position: absolute;
